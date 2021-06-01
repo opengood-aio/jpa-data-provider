@@ -11,5 +11,6 @@ data class Entity(
     @Id
     val id: UUID?,
     val name: String?,
-    val sku: String?
+    val sku: String?,
+    val category: String?
 )

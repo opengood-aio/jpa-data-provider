@@ -23,21 +23,24 @@ class DataProvider(
         mapOf(
             "product_id" to "id",
             "product_name" to "name",
-            "product_sku" to "sku"
+            "product_sku" to "sku",
+            "product_category" to "category"
         )
 
     override fun filterMapper(filters: Map<String, Any>): Entity =
         Entity(
             id = nullableObjectValue("id", filters, convertToUuid),
             name = nullableObjectValue("name", filters, convertToString),
-            sku = nullableObjectValue("sku", filters, convertToString)
+            sku = nullableObjectValue("sku", filters, convertToString),
+            category = nullableObjectValue("category", filters, convertToString)
         )
 
     override fun objectMapper(row: Map<String, Any>): Entity =
         Entity(
             id = objectValue("id", row, Uuid.empty, convertToUuid),
             name = objectValue("name", row, String.empty, convertToString),
-            sku = objectValue("sku", row, String.empty, convertToString)
+            sku = objectValue("sku", row, String.empty, convertToString),
+            category = objectValue("category", row, String.empty, convertToString)
         )
 
     override fun rowMapper(o: Entity): Map<String, Any> {
@@ -46,6 +49,7 @@ class DataProvider(
             putIfNotAbsent(rowValue("id", o.id, Uuid.empty, convertFromUuid))
             putIfNotAbsent(rowValue("name", o.name, String.empty, convertToString))
             putIfNotAbsent(rowValue("sku", o.sku, String.empty, convertToString))
+            putIfNotAbsent(rowValue("category", o.category, String.empty, convertToString))
         }
         return map
     }
