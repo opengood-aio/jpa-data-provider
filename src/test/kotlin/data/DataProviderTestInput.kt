@@ -40,7 +40,7 @@ class DataProviderTestInput(
             "product_name" to "Apple MBP",
             "product_sku" to "246801",
             "product_category" to "computer"
-        ),
+        )
     )
 
     override val filters = mapOf(
@@ -49,8 +49,8 @@ class DataProviderTestInput(
     )
 
     override val sort = listOf(
-        "product_name",
-        "product_sku"
+        "product_sku",
+        "product_category"
     )
 
     override val ignoreKeys = listOf("product_id")
