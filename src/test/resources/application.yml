@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    name: testDataSource
+    driverClassName: org.postgresql.Driver
+    url: ${test.db.url:none}
+    username: ${test.db.username:example}
+    password: ${test.db.password:fake}
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 250
+          batch_versioned_data: true
+        default_schema: dbo
+        generate_statistics: true
+        order_inserts: true
+        order_updates: true
+  sql:
+    init:
+      platform: postgres

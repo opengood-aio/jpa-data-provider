@@ -1,0 +1,52 @@
+name: release
+# description:
+# - Creates release version in gradle.properties
+# - Runs Gradle build creating release jar package
+# - Runs Gradle publishPlugins publishing plugin to Gradle Plugins repository
+# - Creates release version Git commit
+# - Creates Git release version tag
+# - Pushes Git release version commit and tag
+# - Creates GitHub release for release version tag
+# - Creates new development version in gradle.properties, incrementing minor version part
+# - Creates new development version Git commit
+# - Pushes Git new development version commit
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    if: "contains(github.event.head_commit.message, 'Create release')"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Git
+        run: |
+          git config user.name ${GIT_USER}
+          git config user.email ${GIT_EMAIL}
+        env:
+          GIT_USER: ${{ secrets.CI_USER_GIT_USER }}
+          GIT_EMAIL: ${{ secrets.CI_USER_GIT_EMAIL }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Run Release and Publish
+        uses: burrunan/gradle-cache-action@v1
+        with:
+          arguments: clean release -Prelease.useAutomaticVersion=true
+          gradle-version: wrapper
+        env:
+          GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
+          GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
