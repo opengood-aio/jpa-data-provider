@@ -6,6 +6,8 @@ import io.opengood.data.jpa.provider.contract.Sorting
 import io.opengood.data.jpa.provider.contract.SortingParameter
 import io.opengood.data.jpa.provider.contract.getSort
 import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.ExampleMatcher.StringMatcher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -18,17 +20,20 @@ interface JpaDataProvider<T : Any, Id : Any> {
     val mappings: Map<String, String>
 
     fun filterMapper(filters: Map<String, Any>): T
-    fun objectMapper(row: Map<String, Any>): T
-    fun rowMapper(o: T): Map<String, Any>
+    fun objectFieldMapper(row: Map<String, Any>): T
+    fun rowColumnMapper(o: T): Map<String, Any>
 
-    fun filter(
+    private fun filter(
         filters: Map<String, Any>,
         pageable: Pageable = Pageable.unpaged()
     ): Page<T> {
         with(filters) {
             if (isNotEmpty()) {
                 val o = filterMapper(filters)
-                return repository.findAll(Example.of(o), pageable)
+                return repository.findAll(
+                    Example.of(o, ExampleMatcher.matchingAny().withStringMatcher(StringMatcher.CONTAINING)),
+                    pageable
+                )
             }
         }
         return Page.empty()
@@ -45,7 +50,7 @@ interface JpaDataProvider<T : Any, Id : Any> {
                 with(sorting.params) {
                     if (isNotEmpty()) {
                         forEachIndexed { i, it ->
-                            val param = SortingParameter(getObjectMapping(it.name), it.direction)
+                            val param = SortingParameter(getObjectFieldMapping(it.name), it.direction)
                             with(param) {
                                 if (i == 0) {
                                     sort = getSort()
@@ -64,7 +69,7 @@ interface JpaDataProvider<T : Any, Id : Any> {
             with(results) {
                 if (hasContent()) {
                     val items = mutableListOf<Map<String, Any>>()
-                    content.forEach { items.add(rowMapper(it)) }
+                    content.forEach { items.add(rowColumnMapper(it)) }
                     return DataResult(
                         pages = DataResult.Page(
                             index = results.number,
@@ -85,7 +90,7 @@ interface JpaDataProvider<T : Any, Id : Any> {
             with(results) {
                 if (isNotEmpty()) {
                     val items = mutableListOf<Map<String, Any>>()
-                    forEach { items.add(rowMapper(it)) }
+                    forEach { items.add(rowColumnMapper(it)) }
                     return DataResult(
                         pages = DataResult.Page.EMPTY,
                         records = DataResult.Record(
@@ -103,13 +108,13 @@ interface JpaDataProvider<T : Any, Id : Any> {
         with(data) {
             if (isNotEmpty()) {
                 val entities = mutableListOf<T>()
-                forEach { entities.add(objectMapper(it)) }
+                forEach { entities.add(objectFieldMapper(it)) }
 
                 val results = repository.saveAll(entities).toList()
                 with(results) {
                     if (isNotEmpty()) {
                         val items = mutableListOf<Map<String, Any>>()
-                        forEach { items.add(rowMapper(it)) }
+                        forEach { items.add(rowColumnMapper(it)) }
                         return items
                     }
                 }
