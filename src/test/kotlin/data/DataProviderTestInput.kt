@@ -3,7 +3,7 @@ package data
 import io.opengood.data.jpa.provider.JpaDataProvider
 import org.springframework.context.annotation.Configuration
 import spec.JpaDataProviderTestInput
-import java.util.*
+import java.util.UUID
 
 @Configuration
 class DataProviderTestInput(
