@@ -4,6 +4,7 @@
 [![Release](https://github.com/opengoodio/jpa-data-provider/workflows/release/badge.svg)](https://github.com/opengoodio/jpa-data-provider/actions?query=workflow%3Arelease)
 [![Codecov](https://codecov.io/gh/opengoodio/jpa-data-provider/branch/main/graph/badge.svg?token=AEEYTGK87F)](https://codecov.io/gh/opengoodio/jpa-data-provider)
 [![Release Version](https://img.shields.io/github/release/opengoodio/jpa-data-provider.svg)](https://github.com/opengoodio/jpa-data-provider/releases/latest)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.opengood.data/jpa-data-provider/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.opengood.data/jpa-data-provider)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/opengoodio/jpa-data-provider/master/LICENSE)
 [![FOSSA](https://app.fossa.com/api/projects/custom%2B22161%2Fgithub.com%2Fopengoodio%2Fjpa-data-provider.svg?type=small)](https://app.fossa.com/projects/custom%2B22161%2Fgithub.com%2Fopengoodio%2Fjpa-data-provider?ref=badge_small)
 

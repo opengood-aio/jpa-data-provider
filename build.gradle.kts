@@ -19,11 +19,11 @@ opengood {
 
 dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("io.opengood.commons:kotlin-commons:_")
     implementation("javax.persistence:javax.persistence-api:_")
 
     runtimeOnly("org.postgresql:postgresql:_")
 
+    testImplementation("io.opengood.commons:kotlin-commons:_")
     testImplementation("io.opengood.extensions:kotest-extensions:_")
 }
 
