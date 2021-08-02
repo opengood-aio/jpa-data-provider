@@ -3,7 +3,7 @@ package data
 import io.opengood.data.jpa.provider.JpaDataProvider
 import org.springframework.context.annotation.Configuration
 import spec.JpaDataProviderTestInput
-import java.util.UUID
+import java.util.*
 
 @Configuration
 class DataProviderTestInput(
@@ -32,7 +32,7 @@ class DataProviderTestInput(
         mapOf(
             "product_id" to UUID.randomUUID().toString(),
             "product_name" to "Apple Watch",
-            "product_sku" to "123456",
+            "product_sku" to "012345",
             "product_category" to "mobile"
         ),
         mapOf(
@@ -45,7 +45,7 @@ class DataProviderTestInput(
 
     override val filters = mapOf(
         "product_sku" to "123456",
-        "product_category" to "mobile"
+        "product_name" to "Samsung"
     )
 
     override val sort = listOf(

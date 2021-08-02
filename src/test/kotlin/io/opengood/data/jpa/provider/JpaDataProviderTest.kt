@@ -211,10 +211,10 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.index shouldBe pageIndexFirst
                         result.pages.size shouldBe pageSize
                         result.pages.count shouldBe 1
-                        result.records.total shouldBe 2
+                        result.records.total shouldBe 1
                         result.data shouldBe results.filter {
                             it[filters.keyByIndex(0)] == filters.valueByIndex(0)
-                        }.slice(0..1)
+                        }
                     }
 
                     "${dataProvider.name} receives multiple filters and returns filtered paginated results when data exists in data repository" {
@@ -230,9 +230,9 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.count shouldBe 1
                         result.records.total shouldBe 2
                         result.data shouldBe results.filter {
-                            it[filters.keyByIndex(0)] == filters.valueByIndex(0) &&
-                                it[filters.keyByIndex(1)] == filters.valueByIndex(1)
-                        }.slice(0..1)
+                            it[filters.keyByIndex(0)] == filters.valueByIndex(0) ||
+                                (it[filters.keyByIndex(1)] as String).contains(filters.valueByIndex(1) as String)
+                        }
                     }
 
                     "${dataProvider.name} receives single filter and returns filtered non-paginated results when data exists in data repository" {
@@ -241,10 +241,10 @@ class JpaDataProviderTest : FreeSpec() {
                         val result = dataProvider.get(filters = mapOf(filters.keyByIndex(0) to filters.valueByIndex(0)))
 
                         result.pages shouldBe DataResult.Page.EMPTY
-                        result.records.total shouldBe 2
+                        result.records.total shouldBe 1
                         result.data shouldBe results.filter {
                             it[filters.keyByIndex(0)] == filters.valueByIndex(0)
-                        }.slice(0..1)
+                        }
                     }
 
                     "${dataProvider.name} receives multiple filters and returns non-filtered paginated results when data exists in data repository" {
@@ -255,9 +255,9 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages shouldBe DataResult.Page.EMPTY
                         result.records.total shouldBe 2
                         result.data shouldBe results.filter {
-                            it[filters.keyByIndex(0)] == filters.valueByIndex(0) &&
-                                it[filters.keyByIndex(1)] == filters.valueByIndex(1)
-                        }.slice(0..1)
+                            it[filters.keyByIndex(0)] == filters.valueByIndex(0) ||
+                                (it[filters.keyByIndex(1)] as String).contains(filters.valueByIndex(1) as String)
+                        }
                     }
 
                     "${dataProvider.name} converts data into entities and sends to data repository and returns results when data is saved" {

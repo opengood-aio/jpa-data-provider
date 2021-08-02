@@ -11,7 +11,7 @@ import io.opengood.data.jpa.provider.nullableObjectFieldValue
 import io.opengood.data.jpa.provider.objectFieldValue
 import io.opengood.data.jpa.provider.rowColumnValue
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class DataProvider(
