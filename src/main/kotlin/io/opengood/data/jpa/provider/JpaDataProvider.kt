@@ -17,26 +17,19 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface JpaDataProvider<T : Any, Id : Any> {
     val repository: JpaRepository<T, Id>
     val name: String
+    val id: String
     val mappings: Map<String, String>
+
+    fun idConverter(id: Any): Id
 
     fun filterMapper(filters: Map<String, Any>): T
     fun objectFieldMapper(row: Map<String, Any>): T
     fun rowColumnMapper(o: T): Map<String, Any>
 
-    private fun filter(
-        filters: Map<String, Any>,
-        pageable: Pageable = Pageable.unpaged()
-    ): Page<T> {
-        with(filters) {
-            if (isNotEmpty()) {
-                val o = filterMapper(filters)
-                return repository.findAll(
-                    Example.of(o, ExampleMatcher.matchingAny().withStringMatcher(StringMatcher.CONTAINING)),
-                    pageable
-                )
-            }
-        }
-        return Page.empty()
+    fun delete(id: Any): Boolean {
+        val entityId = idConverter(id)
+        repository.deleteById(entityId)
+        return !repository.existsById(entityId)
     }
 
     fun get(
@@ -104,6 +97,12 @@ interface JpaDataProvider<T : Any, Id : Any> {
         }
     }
 
+    fun getById(id: Any): Map<String, Any> {
+        val entityId = idConverter(id)
+        val result = repository.findById(entityId)
+        return result.map { rowColumnMapper(it) }.orElse(emptyMap())
+    }
+
     fun save(data: List<Map<String, Any>>): List<Map<String, Any>> {
         with(data) {
             if (isNotEmpty()) {
@@ -121,5 +120,21 @@ interface JpaDataProvider<T : Any, Id : Any> {
             }
             return emptyList()
         }
+    }
+
+    private fun filter(
+        filters: Map<String, Any>,
+        pageable: Pageable = Pageable.unpaged()
+    ): Page<T> {
+        with(filters) {
+            if (isNotEmpty()) {
+                val o = filterMapper(filters)
+                return repository.findAll(
+                    Example.of(o, ExampleMatcher.matchingAny().withStringMatcher(StringMatcher.CONTAINING)),
+                    pageable
+                )
+            }
+        }
+        return Page.empty()
     }
 }

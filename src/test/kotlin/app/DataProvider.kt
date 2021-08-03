@@ -19,6 +19,7 @@ class DataProvider(
 ) : JpaDataProvider<Entity, UUID> {
 
     override val name: String = "products"
+    override val id: String = "id"
     override val mappings: Map<String, String> =
         mapOf(
             "product_id" to "id",
@@ -26,6 +27,10 @@ class DataProvider(
             "product_sku" to "sku",
             "product_category" to "category"
         )
+
+    override fun idConverter(id: Any): UUID {
+        return convertToUuid(id)!!
+    }
 
     override fun filterMapper(filters: Map<String, Any>): Entity =
         Entity(

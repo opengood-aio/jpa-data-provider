@@ -4,6 +4,9 @@ import app.TestApplication
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.maps.shouldBeEmpty
+import io.kotest.matchers.maps.shouldNotBeEmpty
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.spring.SpringListener
 import io.opengood.commons.kotlin.extension.method.keyByIndex
@@ -34,11 +37,24 @@ class JpaDataProviderTest : FreeSpec() {
             val requiredFilters = 2
             val requiredSort = 2
 
+            val recordIndexFirst = 0
+
+            val filterIndexFirst = 0
+            val filterIndexNext = 1
+
+            val sortIndexFirst = 0
+            val sortIndexNext = 1
+
             val pageIndexFirst = 0
             val pageIndexNext = 1
             val pageIndexLast = 2
+
             val pageSize = 2
             val pageCount = (requiredRecords + pageSize - 1) / pageSize
+
+            val recordRangeFirst: IntRange = 0..1
+            val recordRangeNext: IntRange = 2..3
+            val recordRangeLast: IntRange = 4..4
 
             testInput.forEach { input ->
                 with(input) {
@@ -67,6 +83,17 @@ class JpaDataProviderTest : FreeSpec() {
                         }
                     }
 
+                    "${dataProvider.name} receives identifier and deletes data when it exists in data repository" {
+                        val results = dataProvider.save(data)
+
+                        val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
+
+                        val result = dataProvider.delete(id)
+
+                        result.shouldNotBeNull()
+                        result.shouldBeTrue()
+                    }
+
                     "${dataProvider.name} receives paging request and returns first page of paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
@@ -76,7 +103,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.size shouldBe pageSize
                         result.pages.count shouldBe pageCount
                         result.records.total shouldBe requiredRecords
-                        result.data shouldBe results.slice(0..1)
+                        result.data shouldBe results.slice(recordRangeFirst)
                     }
 
                     "${dataProvider.name} receives paging request and returns next page of paginated results when data exists in data repository" {
@@ -88,7 +115,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.size shouldBe pageSize
                         result.pages.count shouldBe pageCount
                         result.records.total shouldBe requiredRecords
-                        result.data shouldBe results.slice(2..3)
+                        result.data shouldBe results.slice(recordRangeNext)
                     }
 
                     "${dataProvider.name} receives paging request and returns last page of paginated results when data exists in data repository" {
@@ -100,7 +127,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.size shouldBe pageSize
                         result.pages.count shouldBe pageCount
                         result.records.total shouldBe requiredRecords
-                        result.data shouldBe results.slice(4..4)
+                        result.data shouldBe results.slice(recordRangeLast)
                     }
 
                     "${dataProvider.name} receives paging request and returns no results when no data exists in data repository" {
@@ -133,7 +160,7 @@ class JpaDataProviderTest : FreeSpec() {
                             sorting = Sorting(
                                 params = listOf(
                                     SortingParameter(
-                                        name = sort[0],
+                                        name = sort[sortIndexFirst],
                                         direction = SortingDirection.ASC
                                     )
                                 )
@@ -144,7 +171,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.size shouldBe pageSize
                         result.pages.count shouldBe pageCount
                         result.records.total shouldBe requiredRecords
-                        result.data shouldBe results.sortAscending(sort[0]).slice(0..1)
+                        result.data shouldBe results.sortAscending(sort[sortIndexFirst]).slice(recordRangeFirst)
                     }
 
                     "${dataProvider.name} receives sorting request and returns sorted descending results when data exists in data repository" {
@@ -155,7 +182,7 @@ class JpaDataProviderTest : FreeSpec() {
                             sorting = Sorting(
                                 params = listOf(
                                     SortingParameter(
-                                        name = sort[0],
+                                        name = sort[sortIndexFirst],
                                         direction = SortingDirection.DESC
                                     )
                                 )
@@ -166,7 +193,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.size shouldBe pageSize
                         result.pages.count shouldBe pageCount
                         result.records.total shouldBe requiredRecords
-                        result.data shouldBe results.sortDescending(sort[0]).slice(0..1)
+                        result.data shouldBe results.sortDescending(sort[sortIndexFirst]).slice(recordRangeFirst)
                     }
 
                     "${dataProvider.name} receives sorting request and returns sorted multiple results when data exists in data repository" {
@@ -177,11 +204,11 @@ class JpaDataProviderTest : FreeSpec() {
                             sorting = Sorting(
                                 params = listOf(
                                     SortingParameter(
-                                        name = sort[0],
+                                        name = sort[sortIndexFirst],
                                         direction = SortingDirection.ASC
                                     ),
                                     SortingParameter(
-                                        name = sort[1],
+                                        name = sort[sortIndexNext],
                                         direction = SortingDirection.ASC
                                     )
                                 )
@@ -194,17 +221,19 @@ class JpaDataProviderTest : FreeSpec() {
                         result.records.total shouldBe requiredRecords
                         result.data shouldBe results.sortedWith(
                             compareBy(
-                                { it[sort[0]] as String },
-                                { it[sort[1]] as String }
+                                { it[sort[sortIndexFirst]] as String },
+                                { it[sort[sortIndexNext]] as String }
                             )
-                        ).slice(0..1)
+                        ).slice(recordRangeFirst)
                     }
 
                     "${dataProvider.name} receives single filter and returns filtered paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(
-                            filters = mapOf(filters.keyByIndex(0) to filters.valueByIndex(0)),
+                            filters = mapOf(
+                                filters.keyByIndex(filterIndexFirst) to filters.valueByIndex(filterIndexFirst)
+                            ),
                             paging = Paging(index = pageIndexFirst, size = pageSize)
                         )
 
@@ -213,7 +242,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.count shouldBe 1
                         result.records.total shouldBe 1
                         result.data shouldBe results.filter {
-                            it[filters.keyByIndex(0)] == filters.valueByIndex(0)
+                            it[filters.keyByIndex(filterIndexFirst)] == filters.valueByIndex(filterIndexFirst)
                         }
                     }
 
@@ -230,20 +259,25 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages.count shouldBe 1
                         result.records.total shouldBe 2
                         result.data shouldBe results.filter {
-                            it[filters.keyByIndex(0)] == filters.valueByIndex(0) ||
-                                (it[filters.keyByIndex(1)] as String).contains(filters.valueByIndex(1) as String)
+                            it[filters.keyByIndex(filterIndexFirst)] == filters.valueByIndex(filterIndexFirst) ||
+                                (it[filters.keyByIndex(filterIndexNext)] as String)
+                                    .contains(filters.valueByIndex(filterIndexNext) as String)
                         }
                     }
 
                     "${dataProvider.name} receives single filter and returns filtered non-paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
-                        val result = dataProvider.get(filters = mapOf(filters.keyByIndex(0) to filters.valueByIndex(0)))
+                        val result = dataProvider.get(
+                            filters = mapOf(
+                                filters.keyByIndex(filterIndexFirst) to filters.valueByIndex(filterIndexFirst)
+                            )
+                        )
 
                         result.pages shouldBe DataResult.Page.EMPTY
                         result.records.total shouldBe 1
                         result.data shouldBe results.filter {
-                            it[filters.keyByIndex(0)] == filters.valueByIndex(0)
+                            it[filters.keyByIndex(filterIndexFirst)] == filters.valueByIndex(filterIndexFirst)
                         }
                     }
 
@@ -255,9 +289,33 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pages shouldBe DataResult.Page.EMPTY
                         result.records.total shouldBe 2
                         result.data shouldBe results.filter {
-                            it[filters.keyByIndex(0)] == filters.valueByIndex(0) ||
-                                (it[filters.keyByIndex(1)] as String).contains(filters.valueByIndex(1) as String)
+                            it[filters.keyByIndex(filterIndexFirst)] == filters.valueByIndex(filterIndexFirst) ||
+                                (it[filters.keyByIndex(filterIndexNext)] as String)
+                                    .contains(filters.valueByIndex(filterIndexNext) as String)
                         }
+                    }
+
+                    "${dataProvider.name} receives identifier and returns result when data exists in data repository" {
+                        val results = dataProvider.save(data)
+
+                        val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
+
+                        val result = dataProvider.getById(id)
+
+                        result.shouldNotBeNull()
+                        result.shouldNotBeEmpty()
+                        result shouldBe results.first {
+                            it[filters.keyByIndex(filterIndexFirst)] == filters.valueByIndex(filterIndexFirst)
+                        }
+                    }
+
+                    "${dataProvider.name} receives identifier and does not return result when no data exists in data repository" {
+                        val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
+
+                        val result = dataProvider.getById(id)
+
+                        result.shouldNotBeNull()
+                        result.shouldBeEmpty()
                     }
 
                     "${dataProvider.name} converts data into entities and sends to data repository and returns results when data is saved" {
