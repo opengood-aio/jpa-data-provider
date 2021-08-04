@@ -150,7 +150,7 @@ class DataProvider(
 }
 ```
 
-*Notes:*
+#### Definitions
 
 * `name` is the name of the data provider
 * `id` is the name of the entity class `@Id` field
@@ -163,4 +163,127 @@ entity class `@Id` field data type
 * `filterMapper` provides the filters available used to filter data
 * `objectFieldMapper` constructs an entity class from a row of data
 * `rowColumnMapper` constructs a row of data from an entity class
+
+### Converter Functions
+
+Converter functions are provided to allow common data types of `Any` and
+`String` to be converted to and from explicit entity object field class
+types.
+
+The following functions are supported:
+
+| Function | Description | Input Type | Output Type |
+|---|---|---|---|
+| `convertFromDate` | Converts from SQL Date | `java.sql.Date` | `String` |
+| `convertFromUuid` | Converts from UUID | `UUID` | `String` |
+| `convertToDate` | Converts to SQL Date | `Any` | `java.sql.Date` |
+| `convertToString` | Converts to String | `Any` | `String` |
+| `convertToUuid` | Converts to UUID | `Any` | `UUID` |
+
+### Data Contracts
+
+#### `Filters`
+#### `Paging`
+#### `Sorting`
+#### `SortDirection`
+#### `SortParameter`
+
+Data contracts for retrieving data. Includes filtering, paging, and
+sorting.
+
+Data in JSON format:
+
+* `filters`: Map of key/value pairs representing fields in which to
+  filter data from data repository
+  * `key`: Name of field in which to filter data
+  * `value`: Filter value for field
+* `paging`: Pagination parameters in which to retrieve a page of data
+  * `index`: Current index of page of data to retrieve
+  * `size`: Number of rows of data per page to retrieve
+* `sorting`: Map of key/value pairs representing fields and direction in
+  which to sort data from data repository
+  * `params`: Sorting parameters in which to sort data
+    * `name`: Name of field in which to sort data
+    * `direction`: Sort direction `ASC` or `DESC` of field
+
+##### Example
+
+```json
+{
+    "filters": {
+        "key": "product_name",
+        "value": "iPhone"
+    },
+    "paging": {
+        "index": 0,
+        "size": 2
+    },
+    "sorting": {
+        "params": {
+            "name": "product_name",
+            "direction": "ASC"
+        }
+    }
+}
+```
+
+#### `DataResult`
+
+Data contract containing data result. Includes page and record data.
+
+Data in JSON format:
+
+* `pages`: Object containing information about page data
+  * `index`: Current index of page of data retrieved
+  * `size`: Number of rows of data in current page retrieved
+  * `count`: Total number of pages in dataset
+* `records`: Object containing information about record data
+  * `total`: Total number of records in dataset
+* `data`: Array containing map of key/value pairs representing row(s) of
+  data retrieved from data repository
+
+##### Example
+
+```json
+{
+    "pages": {
+        "index": 0,
+        "size": 2,
+        "count": 1
+    },
+    "records": {
+        "total": 2
+    },
+    "data": [
+        {
+            "product_id": "50d113a6-24ff-43cd-bb1d-ca3aa1014e4c",
+            "product_name": "Apple iPhone",
+            "product_sku": "123456",
+            "product_category": "mobile"
+        },
+        {
+            "product_id": "81bc7dde-5c9e-4736-baee-b82dc5f249e3",
+            "product_name": "Apple iPad",
+            "product_sku": "098765",
+            "product_category": "tablet"
+        }
+    ]
+}
+```
+
+### Constants
+
+Several constant object values are provided:
+
+| Object | Constant | Description | Data Type |
+|---|---|---|---|
+| `Dates` | `SQL_MIN_DATE` | Provides a minimum SQL Date | `java.sql.Date` |
+
+### Formats
+
+Several object formatters are provided:
+
+| Object | Constant | Description | Data Type |
+|---|---|---|---|
+| `Formats` | `ISO_DATE` | Formats a date to ISO date format | `SimpleDateFormat` |
 
