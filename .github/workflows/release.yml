@@ -19,7 +19,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    if: "contains(github.event.head_commit.message, 'Create release')"
+    if: ${{ github.event.head_commit.message == 'Create release' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -48,5 +48,5 @@ jobs:
         env:
           GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
           GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+          OSS_REPO_USERNAME: ${{ secrets.OSS_REPO_USERNAME }}
+          OSS_REPO_PASSWORD: ${{ secrets.OSS_REPO_PASSWORD }}
