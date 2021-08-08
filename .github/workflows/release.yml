@@ -43,7 +43,7 @@ jobs:
       - name: Run Release and Publish
         uses: burrunan/gradle-cache-action@v1
         with:
-          arguments: clean release -Prelease.useAutomaticVersion=true
+          arguments: clean release -PskipTests=true -Prelease.useAutomaticVersion=true
           gradle-version: wrapper
         env:
           GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
