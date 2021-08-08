@@ -211,18 +211,19 @@ Data in JSON format:
 ```json
 {
     "filters": {
-        "key": "product_name",
-        "value": "iPhone"
+        "product_name": "iPhone"
     },
     "paging": {
         "index": 0,
         "size": 2
     },
     "sorting": {
-        "params": {
-            "name": "product_name",
-            "direction": "ASC"
-        }
+        "params": [
+            {
+                "name": "product_name",
+                "direction": "ASC"
+            }
+        ]
     }
 }
 ```
