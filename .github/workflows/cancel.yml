@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
-      - name: Canel
+      - name: Cancel
         uses: styfle/cancel-workflow-action@0.6.0
         with:
           workflow_id: 'build.yml,release.yml'

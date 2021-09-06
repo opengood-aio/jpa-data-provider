@@ -1,8 +1,8 @@
 name: release
 # description:
 # - Creates release version in gradle.properties
-# - Runs Gradle build creating release jar package
-# - Runs Gradle publishPlugins publishing plugin to Gradle Plugins repository
+# - Runs Gradle build creating release jar
+# - Publishes release jar to Maven Central artifact repository
 # - Creates release version Git commit
 # - Creates Git release version tag
 # - Pushes Git release version commit and tag
@@ -39,7 +39,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-          distribution: 'adopt'
+          distribution: adopt
 
       - name: Run Release and Publish
         uses: burrunan/gradle-cache-action@v1

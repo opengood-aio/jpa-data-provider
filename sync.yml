@@ -2,4 +2,4 @@ version: 1.0
 
 ci:
   provider: GitHub Actions
-  template: kotlin/lib
+  template: kotlin/lib-postgres
