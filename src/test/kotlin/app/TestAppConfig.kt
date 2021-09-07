@@ -10,6 +10,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import java.sql.Date as SqlDate
+import java.sql.Timestamp as SqlTimestamp
 
 @Configuration
 class TestAppConfig {
@@ -18,21 +19,24 @@ class TestAppConfig {
     fun clock(): Clock = Clock.fixed(Instant.now(), ZoneId.systemDefault())
 
     @Bean
-    fun dateString(clock: Clock, isoDateFormatter: DateTimeFormatter): String =
-        LocalDate.now(clock).format(isoDateFormatter)
+    fun dateString(clock: Clock, sqlDateFormatter: DateTimeFormatter): String =
+        LocalDate.now(clock).format(sqlDateFormatter)
 
     @Bean
-    fun isoDateFormatter(): DateTimeFormatter = DateTimeFormatter.ISO_DATE
+    fun sqlDateFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     @Bean
-    fun isoDateTimeFormatter(): DateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME
+    fun sqlDateTimeFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
 
     @Bean
     fun sqlDate(clock: Clock): SqlDate = SqlDate(clock.millis())
 
     @Bean
-    fun timestampString(clock: Clock, isoDateTimeFormatter: DateTimeFormatter): String =
-        LocalDateTime.now(clock).format(isoDateTimeFormatter)
+    fun sqlTimestamp(clock: Clock): SqlTimestamp = SqlTimestamp(clock.millis())
+
+    @Bean
+    fun timestampString(clock: Clock, sqlDateTimeFormatter: DateTimeFormatter): String =
+        LocalDateTime.now(clock).format(sqlDateTimeFormatter)
 
     @Bean
     fun uuid(): UUID = UUID.randomUUID()

@@ -174,10 +174,16 @@ The following functions are supported:
 
 | Function | Description | Input Type | Output Type |
 |---|---|---|---|
+| `convertFromBoolean` | Converts from Boolean | `Boolean` | `String` |
 | `convertFromDate` | Converts from SQL Date | `java.sql.Date` | `String` |
+| `convertFromInt` | Converts from Integer | `Integer` | `String` |
+| `convertFromTimestamp` | Converts from SQL Timestamp | `java.sql.Timestamp` | `String` |
 | `convertFromUuid` | Converts from UUID | `UUID` | `String` |
+| `convertToBoolean` | Converts to Boolean | `Any` | `Boolean` |
 | `convertToDate` | Converts to SQL Date | `Any` | `java.sql.Date` |
+| `convertToInt` | Converts to Integer | `Any` | `Integer` |
 | `convertToString` | Converts to String | `Any` | `String` |
+| `convertToTimestamp` | Converts to SQL Timestamp | `Any` | `java.sql.Timestamp` |
 | `convertToUuid` | Converts to UUID | `Any` | `UUID` |
 
 ### Data Contracts
@@ -286,5 +292,6 @@ Several object formatters are provided:
 
 | Object | Constant | Description | Data Type |
 |---|---|---|---|
-| `Formats` | `ISO_DATE` | Formats a date to ISO date format | `SimpleDateFormat` |
+| `Formats` | `SQL_DATE` | Formats a date to SQL date format | `SimpleDateFormat` |
+| `Formats` | `SQL_DATE_TIME` | Formats a date/time to SQL timestamp format | `SimpleDateFormat` |
 
