@@ -7,5 +7,4 @@ interface JpaDataProviderTestInput {
     val data: List<Map<String, Any>>
     val filters: Map<String, Any>
     val sort: List<String>
-    val ignoreKeys: List<String>
 }

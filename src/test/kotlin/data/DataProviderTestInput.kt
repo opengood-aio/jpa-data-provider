@@ -52,6 +52,4 @@ class DataProviderTestInput(
         "product_sku",
         "product_category"
     )
-
-    override val ignoreKeys = listOf("product_id")
 }

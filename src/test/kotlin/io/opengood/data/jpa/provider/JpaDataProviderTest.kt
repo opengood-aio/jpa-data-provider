@@ -2,6 +2,7 @@ package io.opengood.data.jpa.provider
 
 import app.TestApplication
 import io.kotest.core.spec.style.FreeSpec
+import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.maps.shouldBeEmpty
@@ -88,10 +89,35 @@ class JpaDataProviderTest : FreeSpec() {
 
                         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
 
-                        val result = dataProvider.delete(id)
+                        dataProvider.delete(id)
 
-                        result.shouldNotBeNull()
-                        result.shouldBeTrue()
+                        dataProvider.exists(id).shouldBeFalse()
+                    }
+
+                    "${dataProvider.name} receives lists of identifiers and deletes all data when it exists in data repository" {
+                        val results = dataProvider.save(data)
+
+                        val ids = results.map { it[dataProvider.getRowColumnMapping(dataProvider.id)]!! }
+
+                        dataProvider.deleteByIds(ids)
+
+                        ids.forEach {
+                            dataProvider.exists(it).shouldBeFalse()
+                        }
+                    }
+
+                    "${dataProvider.name} receives identifier and returns true when data exists in data repository" {
+                        val results = dataProvider.save(data)
+
+                        val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
+
+                        dataProvider.exists(id).shouldBeTrue()
+                    }
+
+                    "${dataProvider.name} receives identifier and returns falsr when data does not exist in data repository" {
+                        val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
+
+                        dataProvider.exists(id).shouldBeFalse()
                     }
 
                     "${dataProvider.name} receives paging request and returns first page of paginated results when data exists in data repository" {
@@ -321,7 +347,7 @@ class JpaDataProviderTest : FreeSpec() {
                     "${dataProvider.name} converts data into entities and sends to data repository and returns results when data is saved" {
                         val results = dataProvider.save(data)
 
-                        results.shouldBeEqualIgnoringKeys(data, *ignoreKeys.toTypedArray())
+                        results.shouldBeEqualIgnoringKeys(data, dataProvider.id)
                     }
 
                     "${dataProvider.name} does not convert data into entities and does not send to data repository and does not return results when data is not saved" {

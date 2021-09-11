@@ -76,6 +76,14 @@ automatically perform data retrieval and persistence using a common
 interface from mappings defined in a special `JpaDataProvider<T, Id>`
 class implementation.
 
+Supported methods:
+
+* `delete`
+* `deleteByIds`
+* `exists`
+* `get`
+* `save`
+
 Simply define the mappings and have the data provider take care of the
 rest:
 

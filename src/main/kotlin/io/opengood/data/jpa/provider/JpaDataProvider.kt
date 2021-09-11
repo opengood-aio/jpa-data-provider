@@ -26,10 +26,19 @@ interface JpaDataProvider<T : Any, Id : Any> {
     fun objectFieldMapper(row: Map<String, Any>): T
     fun rowColumnMapper(o: T): Map<String, Any>
 
-    fun delete(id: Any): Boolean {
+    fun delete(id: Any) {
         val entityId = idConverter(id)
         repository.deleteById(entityId)
-        return !repository.existsById(entityId)
+    }
+
+    fun deleteByIds(ids: List<Any>) {
+        val entityIds = ids.map { idConverter(it) }
+        repository.deleteAllByIdInBatch(entityIds)
+    }
+
+    fun exists(id: Any): Boolean {
+        val entityId = idConverter(id)
+        return repository.existsById(entityId)
     }
 
     fun get(
