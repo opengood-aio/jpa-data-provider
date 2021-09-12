@@ -59,8 +59,12 @@ class JpaDataProviderTest : FreeSpec() {
 
             testInput.forEach { input ->
                 with(input) {
+                    generateIds()
+                    setDependencyIds()
+                    saveDependencies()
+
                     afterTest {
-                        dataProvider.repository.deleteAll()
+                        deleteAll()
                     }
 
                     "Test input for ${dataProvider.name} has $requiredRecords data entries" {
@@ -114,7 +118,7 @@ class JpaDataProviderTest : FreeSpec() {
                         dataProvider.exists(id).shouldBeTrue()
                     }
 
-                    "${dataProvider.name} receives identifier and returns falsr when data does not exist in data repository" {
+                    "${dataProvider.name} receives identifier and returns false when data does not exist in data repository" {
                         val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
 
                         dataProvider.exists(id).shouldBeFalse()
@@ -316,8 +320,8 @@ class JpaDataProviderTest : FreeSpec() {
                         result.records.total shouldBe 2
                         result.data shouldBe results.filter {
                             it[filters.keyByIndex(filterIndexFirst)] == filters.valueByIndex(filterIndexFirst) ||
-                                (it[filters.keyByIndex(filterIndexNext)] as String)
-                                    .contains(filters.valueByIndex(filterIndexNext) as String)
+                                (it[filters.keyByIndex(filterIndexNext)].toString())
+                                    .contains(filters.valueByIndex(filterIndexNext).toString())
                         }
                     }
 
@@ -355,6 +359,8 @@ class JpaDataProviderTest : FreeSpec() {
 
                         results.shouldBeEmpty()
                     }
+
+                    deleteDependencies()
                 }
             }
         }
