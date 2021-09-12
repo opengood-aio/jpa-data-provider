@@ -36,7 +36,7 @@ interface JpaDataProviderTestInput {
     }
 
     fun getIds(input: JpaDataProviderTestInput): List<Any> {
-        return input.data.map { it[input.dataProvider.getRowColumnMapping(dataProvider.id)]!! }
+        return input.data.map { it[input.dataProvider.getRowColumnMapping(input.dataProvider.id)]!! }
             .filter { input.dataProvider.exists(it) }
     }
 
@@ -55,7 +55,7 @@ interface JpaDataProviderTestInput {
             dependencies.forEach { input ->
                 input.generateIds()
 
-                val id = input.dataProvider.getRowColumnMapping(dataProvider.id)
+                val id = input.dataProvider.getRowColumnMapping(input.dataProvider.id)
                 data.forEachIndexed { index, row ->
                     row[id] = input.data[index][id]!!
                 }
