@@ -1,13 +1,17 @@
 package io.opengood.data.jpa.provider
 
 import io.opengood.data.jpa.provider.contract.DataResult
+import io.opengood.data.jpa.provider.contract.Filtering
+import io.opengood.data.jpa.provider.contract.FilteringParameter
+import io.opengood.data.jpa.provider.contract.PageInfo
 import io.opengood.data.jpa.provider.contract.Paging
+import io.opengood.data.jpa.provider.contract.RecordInfo
 import io.opengood.data.jpa.provider.contract.Sorting
 import io.opengood.data.jpa.provider.contract.SortingParameter
+import io.opengood.data.jpa.provider.contract.getMatcher
 import io.opengood.data.jpa.provider.contract.getSort
 import org.springframework.data.domain.Example
 import org.springframework.data.domain.ExampleMatcher
-import org.springframework.data.domain.ExampleMatcher.StringMatcher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -42,67 +46,49 @@ interface JpaDataProvider<T : Any, Id : Any> {
     }
 
     fun get(
-        filters: Map<String, Any> = emptyMap(),
+        filtering: Filtering = Filtering.EMPTY,
         paging: Paging = Paging.EMPTY,
         sorting: Sorting = Sorting.EMPTY
     ): DataResult {
         if (paging != Paging.EMPTY) {
-            var sort = Sort.unsorted()
-            if (sorting != Sorting.EMPTY) {
-                with(sorting.params) {
-                    if (isNotEmpty()) {
-                        forEachIndexed { i, it ->
-                            val param = SortingParameter(getObjectFieldMapping(it.name), it.direction)
-                            with(param) {
-                                if (i == 0) {
-                                    sort = getSort()
-                                } else {
-                                    sort.and(getSort())
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            val filters = filters(filtering)
+            val matcher = matcher(filtering)
+            val pageable = PageRequest.of(paging.index, paging.size, sort(sorting))
 
-            val pageable = PageRequest.of(paging.index, paging.size, sort)
-            val results = if (filters.isNotEmpty()) filter(filters, pageable) else repository.findAll(pageable)
-
-            with(results) {
+            val results = query(filters = filters, matcher = matcher, pageable = pageable)
+            return with(results) {
                 if (hasContent()) {
-                    val items = mutableListOf<Map<String, Any>>()
-                    content.forEach { items.add(rowColumnMapper(it)) }
-                    return DataResult(
-                        pages = DataResult.Page(
+                    DataResult(
+                        pageInfo = PageInfo(
                             index = results.number,
                             size = results.size,
                             count = results.totalPages
                         ),
-                        records = DataResult.Record(
+                        recordInfo = RecordInfo(
                             total = results.totalElements
                         ),
-                        data = items
+                        data = content.map { rowColumnMapper(it) }.toList()
                     )
-                }
+                } else
+                    DataResult.EMPTY
             }
-            return DataResult.EMPTY
         } else {
-            val results = (if (filters.isNotEmpty()) filter(filters) else repository.findAll()).toList()
+            val filters = filters(filtering)
+            val matcher = matcher(filtering)
 
-            with(results) {
-                if (isNotEmpty()) {
-                    val items = mutableListOf<Map<String, Any>>()
-                    forEach { items.add(rowColumnMapper(it)) }
-                    return DataResult(
-                        pages = DataResult.Page.EMPTY,
-                        records = DataResult.Record(
+            val results = query(filters = filters, matcher = matcher)
+            return with(results) {
+                if (hasContent()) {
+                    DataResult(
+                        pageInfo = PageInfo.EMPTY,
+                        recordInfo = RecordInfo(
                             total = results.size.toLong()
                         ),
-                        data = items
+                        data = content.map { rowColumnMapper(it) }.toList()
                     )
-                }
+                } else
+                    DataResult.EMPTY
             }
-            return DataResult.EMPTY
         }
     }
 
@@ -121,9 +107,7 @@ interface JpaDataProvider<T : Any, Id : Any> {
                 val results = repository.saveAll(entities).toList()
                 with(results) {
                     if (isNotEmpty()) {
-                        val items = mutableListOf<Map<String, Any>>()
-                        forEach { items.add(rowColumnMapper(it)) }
-                        return items
+                        return map { rowColumnMapper(it) }.toList()
                     }
                 }
             }
@@ -131,19 +115,63 @@ interface JpaDataProvider<T : Any, Id : Any> {
         }
     }
 
-    private fun filter(
-        filters: Map<String, Any>,
-        pageable: Pageable = Pageable.unpaged()
-    ): Page<T> {
-        with(filters) {
-            if (isNotEmpty()) {
-                val o = filterMapper(filters)
-                return repository.findAll(
-                    Example.of(o, ExampleMatcher.matchingAny().withStringMatcher(StringMatcher.CONTAINING)),
-                    pageable
-                )
+    private fun filters(filtering: Filtering): Map<String, Any> {
+        return with(filtering.params) {
+            if (isNotEmpty()) associate { it.name to it.value } else emptyMap()
+        }
+    }
+
+    private fun matcher(filtering: Filtering): ExampleMatcher {
+        var matcher = ExampleMatcher.matchingAny()
+        if (filtering != Filtering.EMPTY) {
+            with(filtering.params) {
+                if (isNotEmpty()) {
+                    forEach {
+                        val param = FilteringParameter(getObjectFieldMapping(it.name), it.value, it.type)
+                        with(param) {
+                            matcher = getMatcher(matcher)
+                        }
+                    }
+                }
+            }
+        } else {
+            matcher = FilteringParameter.defaultMatcher
+        }
+        return matcher
+    }
+
+    private fun sort(sorting: Sorting): Sort {
+        var sort = Sort.unsorted()
+        if (sorting != Sorting.EMPTY) {
+            with(sorting.params) {
+                if (isNotEmpty()) {
+                    forEachIndexed { i, it ->
+                        val param = SortingParameter(getObjectFieldMapping(it.name), it.direction)
+                        with(param) {
+                            if (i == 0) {
+                                sort = getSort()
+                            } else {
+                                sort.and(getSort())
+                            }
+                        }
+                    }
+                }
             }
         }
-        return Page.empty()
+        return sort
+    }
+
+    private fun query(
+        filters: Map<String, Any>,
+        matcher: ExampleMatcher,
+        pageable: Pageable = Pageable.unpaged()
+    ): Page<T> {
+        return with(filters) {
+            if (isNotEmpty()) {
+                val o = filterMapper(filters)
+                repository.findAll(Example.of(o, matcher), pageable)
+            } else
+                repository.findAll(pageable)
+        }
     }
 }

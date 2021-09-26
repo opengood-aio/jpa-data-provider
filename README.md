@@ -196,7 +196,9 @@ The following functions are supported:
 
 ### Data Contracts
 
-#### `Filters`
+#### `Filtering`
+#### `FilteringParameter`
+#### `FilteringType`
 #### `Paging`
 #### `Sorting`
 #### `SortDirection`
@@ -207,25 +209,37 @@ sorting.
 
 Data in JSON format:
 
-* `filters`: Map of key/value pairs representing fields in which to
-  filter data from data repository
-  * `key`: Name of field in which to filter data
-  * `value`: Filter value for field
+* `filters`: List of parameters representing fields, values, and types
+  in which to filter data from data repository
+  * `params`: Filtering parameters in which to filter data
+    * `name`: Name of field in which to filter data
+    * `value`: Filter value for field
+    * `type`: Filter type for field
+      * `EQUALS` performs equality filter on field
+      * `CONTAINS` performs contains filter on field
 * `paging`: Pagination parameters in which to retrieve a page of data
   * `index`: Current index of page of data to retrieve
   * `size`: Number of rows of data per page to retrieve
-* `sorting`: Map of key/value pairs representing fields and direction in
+* `sorting`: List of parameters representing fields and direction in
   which to sort data from data repository
   * `params`: Sorting parameters in which to sort data
     * `name`: Name of field in which to sort data
-    * `direction`: Sort direction `ASC` or `DESC` of field
+    * `direction`: Sort direction of field
+      * `ASC` sorts field in ascending order
+      * `DESC` sorts field in descending order
 
 ##### Example
 
 ```json
 {
     "filters": {
-        "product_name": "iPhone"
+        "params": [
+            {
+                "name": "product_name",
+                "value": "iPhone",
+                "type": "CONTAINS"
+            }
+        ]
     },
     "paging": {
         "index": 0,
@@ -248,11 +262,11 @@ Data contract containing data result. Includes page and record data.
 
 Data in JSON format:
 
-* `pages`: Object containing information about page data
+* `pageInfo`: Object containing information about page data
   * `index`: Current index of page of data retrieved
   * `size`: Number of rows of data in current page retrieved
   * `count`: Total number of pages in dataset
-* `records`: Object containing information about record data
+* `recordInfo`: Object containing information about record data
   * `total`: Total number of records in dataset
 * `data`: Array containing map of key/value pairs representing row(s) of
   data retrieved from data repository
@@ -261,12 +275,12 @@ Data in JSON format:
 
 ```json
 {
-    "pages": {
+    "pageInfo": {
         "index": 0,
         "size": 2,
         "count": 1
     },
-    "records": {
+    "recordInfo": {
         "total": 2
     },
     "data": [

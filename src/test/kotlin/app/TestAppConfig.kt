@@ -1,5 +1,6 @@
 package app
 
+import io.opengood.data.jpa.provider.constant.Formats
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import java.time.Clock
@@ -23,10 +24,10 @@ class TestAppConfig {
         LocalDate.now(clock).format(sqlDateFormatter)
 
     @Bean
-    fun sqlDateFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    fun sqlDateFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern(Formats.SQL_DATE.toPattern())
 
     @Bean
-    fun sqlDateTimeFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+    fun sqlDateTimeFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern(Formats.SQL_DATE_TIME.toPattern())
 
     @Bean
     fun sqlDate(clock: Clock): SqlDate = SqlDate(clock.millis())

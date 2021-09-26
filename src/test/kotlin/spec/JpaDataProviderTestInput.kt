@@ -1,13 +1,14 @@
 package spec
 
 import io.opengood.data.jpa.provider.JpaDataProvider
+import io.opengood.data.jpa.provider.contract.FilteringParameter
 import io.opengood.data.jpa.provider.getRowColumnMapping
 import java.util.UUID
 
 interface JpaDataProviderTestInput {
     val dataProvider: JpaDataProvider<*, *>
     val data: List<MutableMap<String, Any>>
-    val filters: Map<String, Any>
+    val filters: List<FilteringParameter>
     val sort: List<String>
 
     fun getDependencies(): List<JpaDataProviderTestInput> = emptyList()
@@ -36,7 +37,8 @@ interface JpaDataProviderTestInput {
     }
 
     fun getIds(input: JpaDataProviderTestInput): List<Any> {
-        return input.data.map { it[input.dataProvider.getRowColumnMapping(input.dataProvider.id)]!! }
+        return input.data
+            .map { it[input.dataProvider.getRowColumnMapping(input.dataProvider.id)]!! }
             .filter { input.dataProvider.exists(it) }
     }
 

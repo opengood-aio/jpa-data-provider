@@ -1,6 +1,8 @@
 package data
 
 import io.opengood.data.jpa.provider.JpaDataProvider
+import io.opengood.data.jpa.provider.contract.FilteringParameter
+import io.opengood.data.jpa.provider.contract.FilteringType
 import org.springframework.context.annotation.Configuration
 import spec.JpaDataProviderTestInput
 
@@ -37,9 +39,9 @@ class DataProviderTestInput(
         )
     )
 
-    override val filters = mapOf(
-        "product_sku" to "123456",
-        "product_name" to "Samsung"
+    override val filters = listOf(
+        FilteringParameter(name = "product_sku", value = "123456", type = FilteringType.EQUALS),
+        FilteringParameter(name = "product_name", value = "Samsung", type = FilteringType.CONTAINS)
     )
 
     override val sort = listOf(
