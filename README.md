@@ -182,14 +182,24 @@ The following functions are supported:
 
 | Function | Description | Input Type | Output Type |
 |---|---|---|---|
+| `convertFromBigDecimal` | Converts from BigDecimal | `BigDecimal` | `String` |
 | `convertFromBoolean` | Converts from Boolean | `Boolean` | `String` |
 | `convertFromDate` | Converts from SQL Date | `java.sql.Date` | `String` |
+| `convertFromDouble` | Converts from Double | `Double` | `String` |
+| `convertFromFloat` | Converts from Float | `Float` | `String` |
 | `convertFromInt` | Converts from Integer | `Integer` | `String` |
+| `convertFromLong` | Converts from Long | `Long` | `String` |
+| `convertFromShort` | Converts from Short | `Short` | `String` |
 | `convertFromTimestamp` | Converts from SQL Timestamp | `java.sql.Timestamp` | `String` |
 | `convertFromUuid` | Converts from UUID | `UUID` | `String` |
+| `convertToBigDecimal` | Converts to BigDecimal | `Any` | `BigDecimal` |
 | `convertToBoolean` | Converts to Boolean | `Any` | `Boolean` |
 | `convertToDate` | Converts to SQL Date | `Any` | `java.sql.Date` |
+| `convertToDouble` | Converts to Double | `Any` | `Double` |
+| `convertToFloat` | Converts to Float | `Any` | `Float` |
 | `convertToInt` | Converts to Integer | `Any` | `Integer` |
+| `convertToLong` | Converts to Long | `Any` | `Long` |
+| `convertToShort` | Converts to Short | `Any` | `Short` |
 | `convertToString` | Converts to String | `Any` | `String` |
 | `convertToTimestamp` | Converts to SQL Timestamp | `Any` | `java.sql.Timestamp` |
 | `convertToUuid` | Converts to UUID | `Any` | `UUID` |

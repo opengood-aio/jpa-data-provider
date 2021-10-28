@@ -8,6 +8,8 @@ import io.kotest.matchers.shouldBe
 import io.kotest.spring.SpringListener
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.UUID
 import java.sql.Date as SqlDate
 import java.sql.Timestamp as SqlTimestamp
@@ -33,6 +35,14 @@ class ConvertersTest : FunSpec() {
     override fun listeners() = listOf(SpringListener)
 
     init {
+        test("convertFromBigDecimal function converts non-null big decimal to string and returns non-null string") {
+            convertFromBigDecimal(BigDecimal(100.45).setScale(2, RoundingMode.HALF_UP)) shouldBe "100.45"
+        }
+
+        test("convertFromBigDecimal function does not convert null big decimal to string and returns null string") {
+            convertFromBigDecimal(null).shouldBeNull()
+        }
+
         test("convertFromBoolean function converts non-null boolean to string and returns non-null string") {
             convertFromBoolean(true) shouldBe "true"
         }
@@ -49,16 +59,44 @@ class ConvertersTest : FunSpec() {
             convertFromDate(null).shouldBeNull()
         }
 
-        test("convertFromUuid function converts non-null UUID to string and returns non-null string") {
-            convertFromUuid(uuid) shouldBe uuid.toString()
-        }
-
         test("convertFromInt function converts non-null integer to string and returns non-null string") {
             convertFromInt(1) shouldBe "1"
         }
 
         test("convertFromInt function does not convert null integer to string and returns null string") {
             convertFromInt(null).shouldBeNull()
+        }
+
+        test("convertFromDouble function converts non-null double to string and returns non-null string") {
+            convertFromDouble(1000.00) shouldBe "1000.0"
+        }
+
+        test("convertFromDouble function does not convert null double to string and returns null string") {
+            convertFromDouble(null).shouldBeNull()
+        }
+
+        test("convertFromFloat function converts non-null float to string and returns non-null string") {
+            convertFromFloat(10.00f) shouldBe "10.0"
+        }
+
+        test("convertFromFloat function does not convert null float to string and returns null string") {
+            convertFromFloat(null).shouldBeNull()
+        }
+
+        test("convertFromLong function converts non-null long to string and returns non-null string") {
+            convertFromLong(1000L) shouldBe "1000"
+        }
+
+        test("convertFromLong function does not convert null long to string and returns null string") {
+            convertFromLong(null).shouldBeNull()
+        }
+
+        test("convertFromShort function converts non-null short to string and returns non-null string") {
+            convertFromShort(100) shouldBe "100"
+        }
+
+        test("convertFromShort function does not convert null short to string and returns null string") {
+            convertFromShort(null).shouldBeNull()
         }
 
         test("convertFromTimestamp function converts non-null SQL timestamp to string and returns non-null string") {
@@ -69,8 +107,20 @@ class ConvertersTest : FunSpec() {
             convertFromTimestamp(null).shouldBeNull()
         }
 
+        test("convertFromUuid function converts non-null UUID to string and returns non-null string") {
+            convertFromUuid(uuid) shouldBe uuid.toString()
+        }
+
         test("convertFromUuid function does not convert null UUID to string and returns null string") {
             convertFromUuid(null).shouldBeNull()
+        }
+
+        test("convertToBigDecimal function converts non-null object to big decimal and returns non-null big decimal") {
+            convertToBigDecimal("100.45") shouldBe BigDecimal(100.45).setScale(2, RoundingMode.HALF_UP)
+        }
+
+        test("convertToBigDecimal function does not convert null object to big decimal and returns null big decimal") {
+            convertToBigDecimal(null).shouldBeNull()
         }
 
         test("convertToBoolean function converts non-null object to boolean and returns non-null boolean") {
@@ -89,12 +139,36 @@ class ConvertersTest : FunSpec() {
             convertToDate(null).shouldBeNull()
         }
 
+        test("convertToFloat function converts non-null object to float and returns non-null float") {
+            convertToFloat("100.00") shouldBe 100.00
+        }
+
+        test("convertToFloat function does not convert null object to float and returns null float") {
+            convertToFloat(null).shouldBeNull()
+        }
+
+        test("convertToLong function converts non-null object to long and returns non-null long") {
+            convertToLong("1000") shouldBe 1000L
+        }
+
+        test("convertToLong function does not convert null object to long and returns null long") {
+            convertToLong(null).shouldBeNull()
+        }
+
         test("convertToInt function converts non-null object to integer and returns non-null integer") {
             convertToInt("1") shouldBe 1
         }
 
         test("convertToInt function does not convert null object to integer and returns null integer") {
             convertToInt(null).shouldBeNull()
+        }
+
+        test("convertToShort function converts non-null object to short and returns non-null short") {
+            convertToShort("1") shouldBe 1
+        }
+
+        test("convertToShort function does not convert null object to short and returns null short") {
+            convertToShort(null).shouldBeNull()
         }
 
         test("convertToString function converts non-null object to string and returns non-null string") {
