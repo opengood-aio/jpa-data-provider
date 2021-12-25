@@ -8,6 +8,7 @@ on:
     paths-ignore:
       - '.github/workflows/cancel.yml'
       - '.github/workflows/release.yml'
+      - '.github/workflows/updater.yml'
       - '.gitignore'
       - 'gradle.properties'
       - 'LICENSE'
