@@ -5,7 +5,6 @@ data class DataResult(
     val recordInfo: RecordInfo,
     val data: List<Map<String, Any>>
 ) {
-
     companion object {
         val EMPTY = DataResult(
             pageInfo = PageInfo.EMPTY,
