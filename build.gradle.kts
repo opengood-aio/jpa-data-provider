@@ -18,7 +18,7 @@ opengood {
 }
 
 dependencies {
-    api("org.springframework.boot:spring-boot-starter-data-jpa:_")
+    api("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.opengood.commons:kotlin-commons:_")
     implementation("javax.persistence:javax.persistence-api:_")
 
