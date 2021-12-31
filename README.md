@@ -209,6 +209,7 @@ The following functions are supported:
 #### `Filtering`
 #### `FilteringParameter`
 #### `FilteringType`
+#### `FilteringCondition`
 #### `Paging`
 #### `Sorting`
 #### `SortDirection`
