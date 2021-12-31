@@ -25,7 +25,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v1.0.4
 
       - name: Setup Git
         run: |
@@ -36,7 +36,7 @@ jobs:
           GIT_EMAIL: ${{ secrets.CI_USER_GIT_EMAIL }}
 
       - name: Setup Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2.5.0
         with:
           java-version: 11
           distribution: adopt
