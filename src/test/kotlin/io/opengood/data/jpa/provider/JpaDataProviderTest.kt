@@ -12,8 +12,10 @@ import io.kotest.matchers.shouldBe
 import io.kotest.spring.SpringListener
 import io.opengood.commons.kotlin.extension.method.sortAscending
 import io.opengood.commons.kotlin.extension.method.sortDescending
+import io.opengood.commons.kotlin.infix.then
 import io.opengood.data.jpa.provider.contract.DataResult
 import io.opengood.data.jpa.provider.contract.Filtering
+import io.opengood.data.jpa.provider.contract.FilteringCondition
 import io.opengood.data.jpa.provider.contract.FilteringType
 import io.opengood.data.jpa.provider.contract.PageInfo
 import io.opengood.data.jpa.provider.contract.Paging
@@ -60,6 +62,11 @@ class JpaDataProviderTest : FreeSpec() {
 
             testInput.forEach { input ->
                 with(input) {
+                    val filterCondition = (
+                        (input.filters.any { it.condition == FilteringCondition.AND }) then
+                            { FilteringCondition.AND }
+                        ) ?: FilteringCondition.OR
+
                     generateIds()
                     setDependencyIds()
                     saveDependencies()
@@ -68,21 +75,21 @@ class JpaDataProviderTest : FreeSpec() {
                         deleteAll()
                     }
 
-                    "Test input for ${dataProvider.name} has $requiredRecords data entries" {
+                    "Test input for ${input.name} ${dataProvider.name} has $requiredRecords data entries" {
                         with(data) {
                             isNotEmpty().shouldBeTrue()
                             size shouldBe requiredRecords
                         }
                     }
 
-                    "Test input for ${dataProvider.name} has $requiredFilters filter items" {
+                    "Test input for ${input.name} ${dataProvider.name} has $requiredFilters filter items" {
                         with(filters) {
                             isNotEmpty().shouldBeTrue()
                             size shouldBe requiredFilters
                         }
                     }
 
-                    "Test input for ${dataProvider.name} filters has equals and contains types" {
+                    "Test input for ${input.name} ${dataProvider.name} filters has equals and contains types" {
                         with(filters) {
                             isNotEmpty().shouldBeTrue()
                             filters[filterIndexFirst].type shouldBe FilteringType.EQUALS
@@ -90,14 +97,14 @@ class JpaDataProviderTest : FreeSpec() {
                         }
                     }
 
-                    "Test input for ${dataProvider.name} has $requiredSort sort items" {
+                    "Test input for ${input.name} ${dataProvider.name} has $requiredSort sort items" {
                         with(sort) {
                             isNotEmpty().shouldBeTrue()
                             size shouldBe requiredSort
                         }
                     }
 
-                    "${dataProvider.name} receives identifier and deletes data when it exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives identifier and deletes data when it exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
@@ -107,7 +114,7 @@ class JpaDataProviderTest : FreeSpec() {
                         dataProvider.exists(id).shouldBeFalse()
                     }
 
-                    "${dataProvider.name} receives lists of identifiers and deletes all data when it exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives lists of identifiers and deletes all data when it exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val ids = results.map { it[dataProvider.getRowColumnMapping(dataProvider.id)]!! }
@@ -119,7 +126,7 @@ class JpaDataProviderTest : FreeSpec() {
                         }
                     }
 
-                    "${dataProvider.name} receives identifier and returns true when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives identifier and returns true when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
@@ -127,13 +134,13 @@ class JpaDataProviderTest : FreeSpec() {
                         dataProvider.exists(id).shouldBeTrue()
                     }
 
-                    "${dataProvider.name} receives identifier and returns false when data does not exist in data repository" {
+                    "${input.name} ${dataProvider.name} receives identifier and returns false when data does not exist in data repository" {
                         val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
 
                         dataProvider.exists(id).shouldBeFalse()
                     }
 
-                    "${dataProvider.name} receives paging request and returns first page of paginated results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives paging request and returns first page of paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(paging = Paging(index = pageIndexFirst, size = pageSize))
@@ -145,7 +152,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.data shouldBe results.slice(recordRangeFirst)
                     }
 
-                    "${dataProvider.name} receives paging request and returns next page of paginated results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives paging request and returns next page of paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(paging = Paging(index = pageIndexNext, size = pageSize))
@@ -157,7 +164,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.data shouldBe results.slice(recordRangeNext)
                     }
 
-                    "${dataProvider.name} receives paging request and returns last page of paginated results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives paging request and returns last page of paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(paging = Paging(index = pageIndexLast, size = pageSize))
@@ -169,13 +176,13 @@ class JpaDataProviderTest : FreeSpec() {
                         result.data shouldBe results.slice(recordRangeLast)
                     }
 
-                    "${dataProvider.name} receives paging request and returns no results when no data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives paging request and returns no results when no data exists in data repository" {
                         val result = dataProvider.get(paging = Paging(index = pageIndexFirst, size = pageSize))
 
                         result shouldBe DataResult.EMPTY
                     }
 
-                    "${dataProvider.name} receives empty paging request and returns non-paginated results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives empty paging request and returns non-paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(paging = Paging.EMPTY)
@@ -185,13 +192,13 @@ class JpaDataProviderTest : FreeSpec() {
                         result.data shouldBe results
                     }
 
-                    "${dataProvider.name} receives empty paging request and returns no results when no data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives empty paging request and returns no results when no data exists in data repository" {
                         val result = dataProvider.get(paging = Paging.EMPTY)
 
                         result shouldBe DataResult.EMPTY
                     }
 
-                    "${dataProvider.name} receives sorting request and returns sorted ascending results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives sorting request and returns sorted ascending results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(
@@ -213,7 +220,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.data shouldBe results.sortAscending(sort[sortIndexFirst]).slice(recordRangeFirst)
                     }
 
-                    "${dataProvider.name} receives sorting request and returns sorted descending results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives sorting request and returns sorted descending results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(
@@ -235,7 +242,7 @@ class JpaDataProviderTest : FreeSpec() {
                         result.data shouldBe results.sortDescending(sort[sortIndexFirst]).slice(recordRangeFirst)
                     }
 
-                    "${dataProvider.name} receives sorting request and returns sorted multiple results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives sorting request and returns sorted multiple results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(
@@ -266,24 +273,26 @@ class JpaDataProviderTest : FreeSpec() {
                         ).slice(recordRangeFirst)
                     }
 
-                    "${dataProvider.name} receives single equals type filter and returns filtered paginated results when data exists in data repository" {
-                        val results = dataProvider.save(data)
+                    if (filterCondition == FilteringCondition.OR) {
+                        "${input.name} ${dataProvider.name} receives single equals type filter and returns filtered paginated results when data exists in data repository" {
+                            val results = dataProvider.save(data)
 
-                        val result = dataProvider.get(
-                            filtering = Filtering(params = listOf(filters[filterIndexFirst])),
-                            paging = Paging(index = pageIndexFirst, size = pageSize)
-                        )
+                            val result = dataProvider.get(
+                                filtering = Filtering(params = listOf(filters[filterIndexFirst])),
+                                paging = Paging(index = pageIndexFirst, size = pageSize)
+                            )
 
-                        result.pageInfo.index shouldBe pageIndexFirst
-                        result.pageInfo.size shouldBe pageSize
-                        result.pageInfo.count shouldBe 1
-                        result.recordInfo.total shouldBe 1
-                        result.data shouldBe results.filter {
-                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                            result.pageInfo.index shouldBe pageIndexFirst
+                            result.pageInfo.size shouldBe pageSize
+                            result.pageInfo.count shouldBe 1
+                            result.recordInfo.total shouldBe 1
+                            result.data shouldBe results.filter {
+                                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                            }
                         }
                     }
 
-                    "${dataProvider.name} receives multiple equals and contains type filters and returns filtered paginated results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives multiple equals and contains type filters and returns filtered paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(
@@ -295,42 +304,68 @@ class JpaDataProviderTest : FreeSpec() {
                         result.pageInfo.size shouldBe pageSize
                         result.pageInfo.count shouldBe 1
                         result.recordInfo.total shouldBe 2
-                        result.data shouldBe results.filter {
-                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
-                                (it[filters[filterIndexNext].name] as String)
-                                    .contains(filters[filterIndexNext].value as String)
+
+                        when (filterCondition) {
+                            FilteringCondition.AND -> {
+                                result.data shouldBe results.filter {
+                                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
+                                        (it[filters[filterIndexNext].name] as String)
+                                            .contains(filters[filterIndexNext].value as String)
+                                }
+                            }
+                            FilteringCondition.OR -> {
+                                result.data shouldBe results.filter {
+                                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
+                                        (it[filters[filterIndexNext].name] as String)
+                                            .contains(filters[filterIndexNext].value as String)
+                                }
+                            }
                         }
                     }
 
-                    "${dataProvider.name} receives single equals type filter and returns filtered non-paginated results when data exists in data repository" {
-                        val results = dataProvider.save(data)
+                    if (filterCondition == FilteringCondition.OR) {
+                        "${input.name} ${dataProvider.name} receives single equals type filter and returns filtered non-paginated results when data exists in data repository" {
+                            val results = dataProvider.save(data)
 
-                        val result = dataProvider.get(
-                            filtering = Filtering(params = listOf(filters[filterIndexFirst]))
-                        )
+                            val result = dataProvider.get(
+                                filtering = Filtering(params = listOf(filters[filterIndexFirst]))
+                            )
 
-                        result.pageInfo shouldBe PageInfo.EMPTY
-                        result.recordInfo.total shouldBe 1
-                        result.data shouldBe results.filter {
-                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                            result.pageInfo shouldBe PageInfo.EMPTY
+                            result.recordInfo.total shouldBe 1
+                            result.data shouldBe results.filter {
+                                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                            }
                         }
                     }
 
-                    "${dataProvider.name} receives multiple equals and contains type filters and returns non-filtered paginated results when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives multiple equals and contains type filters and returns non-filtered paginated results when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val result = dataProvider.get(filtering = Filtering(params = filters))
 
                         result.pageInfo shouldBe PageInfo.EMPTY
                         result.recordInfo.total shouldBe 2
-                        result.data shouldBe results.filter {
-                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
-                                (it[filters[filterIndexNext].name] as String)
-                                    .contains(filters[filterIndexNext].value as String)
+
+                        when (filterCondition) {
+                            FilteringCondition.AND -> {
+                                result.data shouldBe results.filter {
+                                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
+                                        (it[filters[filterIndexNext].name] as String)
+                                            .contains(filters[filterIndexNext].value as String)
+                                }
+                            }
+                            FilteringCondition.OR -> {
+                                result.data shouldBe results.filter {
+                                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
+                                        (it[filters[filterIndexNext].name] as String)
+                                            .contains(filters[filterIndexNext].value as String)
+                                }
+                            }
                         }
                     }
 
-                    "${dataProvider.name} receives identifier and returns result when data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives identifier and returns result when data exists in data repository" {
                         val results = dataProvider.save(data)
 
                         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
@@ -344,7 +379,7 @@ class JpaDataProviderTest : FreeSpec() {
                         }
                     }
 
-                    "${dataProvider.name} receives identifier and does not return result when no data exists in data repository" {
+                    "${input.name} ${dataProvider.name} receives identifier and does not return result when no data exists in data repository" {
                         val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
 
                         val result = dataProvider.getById(id)
@@ -353,13 +388,13 @@ class JpaDataProviderTest : FreeSpec() {
                         result.shouldBeEmpty()
                     }
 
-                    "${dataProvider.name} converts data into entities and sends to data repository and returns results when data is saved" {
+                    "${input.name} ${dataProvider.name} converts data into entities and sends to data repository and returns results when data is saved" {
                         val results = dataProvider.save(data)
 
                         results.shouldBeEqualIgnoringKeys(data, dataProvider.id)
                     }
 
-                    "${dataProvider.name} does not convert data into entities and does not send to data repository and does not return results when data is not saved" {
+                    "${input.name} ${dataProvider.name} does not convert data into entities and does not send to data repository and does not return results when data is not saved" {
                         val results = dataProvider.save(emptyList())
 
                         results.shouldBeEmpty()

@@ -6,6 +6,7 @@ import io.opengood.data.jpa.provider.getRowColumnMapping
 import java.util.UUID
 
 interface JpaDataProviderTestInput {
+    val name: String
     val dataProvider: JpaDataProvider<*, *>
     val data: List<MutableMap<String, Any>>
     val filters: List<FilteringParameter>

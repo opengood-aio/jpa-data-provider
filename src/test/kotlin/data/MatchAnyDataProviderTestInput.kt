@@ -7,9 +7,11 @@ import org.springframework.context.annotation.Configuration
 import spec.JpaDataProviderTestInput
 
 @Configuration
-class DataProviderTestInput(
+class MatchAnyDataProviderTestInput(
     override val dataProvider: JpaDataProvider<*, *>
 ) : JpaDataProviderTestInput {
+
+    override val name = "Match Any"
 
     override val data: List<MutableMap<String, Any>> = listOf(
         mutableMapOf(

@@ -1,7 +1,9 @@
 package io.opengood.data.jpa.provider
 
+import io.opengood.commons.kotlin.infix.then
 import io.opengood.data.jpa.provider.contract.DataResult
 import io.opengood.data.jpa.provider.contract.Filtering
+import io.opengood.data.jpa.provider.contract.FilteringCondition
 import io.opengood.data.jpa.provider.contract.FilteringParameter
 import io.opengood.data.jpa.provider.contract.PageInfo
 import io.opengood.data.jpa.provider.contract.Paging
@@ -122,12 +124,12 @@ interface JpaDataProvider<T : Any, Id : Any> {
     }
 
     private fun matcher(filtering: Filtering): ExampleMatcher {
-        var matcher = ExampleMatcher.matchingAny()
+        var matcher = matcherCondition(filtering)
         if (filtering != Filtering.EMPTY) {
             with(filtering.params) {
                 if (isNotEmpty()) {
                     forEach {
-                        val param = FilteringParameter(getObjectFieldMapping(it.name), it.value, it.type)
+                        val param = FilteringParameter(getObjectFieldMapping(it.name), it.value, it.type, it.condition)
                         with(param) {
                             matcher = getMatcher(matcher)
                         }
@@ -139,6 +141,10 @@ interface JpaDataProvider<T : Any, Id : Any> {
         }
         return matcher
     }
+
+    private fun matcherCondition(filtering: Filtering): ExampleMatcher =
+        ((filtering.params.any { it.condition == FilteringCondition.AND }) then { ExampleMatcher.matchingAll() })
+            ?: ExampleMatcher.matchingAny()
 
     private fun sort(sorting: Sorting): Sort {
         var sort = Sort.unsorted()

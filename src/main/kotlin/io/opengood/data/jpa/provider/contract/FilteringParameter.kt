@@ -6,7 +6,8 @@ import org.springframework.data.domain.ExampleMatcher.StringMatcher
 data class FilteringParameter(
     val name: String,
     val value: Any,
-    val type: FilteringType
+    val type: FilteringType,
+    val condition: FilteringCondition = FilteringCondition.OR
 ) {
     companion object {
         val defaultMatcher: ExampleMatcher
