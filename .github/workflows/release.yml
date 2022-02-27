@@ -36,7 +36,7 @@ jobs:
           GIT_EMAIL: ${{ secrets.CI_USER_GIT_EMAIL }}
 
       - name: Setup Java
-        uses: actions/setup-java@v2.5.0
+        uses: actions/setup-java@v3.0.0
         with:
           java-version: 11
           distribution: adopt
