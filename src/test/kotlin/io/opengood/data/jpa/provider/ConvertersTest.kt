@@ -2,10 +2,10 @@ package io.opengood.data.jpa.provider
 
 import app.TestApplication
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.spring.SpringListener
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.math.BigDecimal
@@ -32,7 +32,7 @@ class ConvertersTest : FunSpec() {
     @Autowired
     lateinit var uuid: UUID
 
-    override fun listeners() = listOf(SpringListener)
+    override fun extensions() = listOf(SpringExtension)
 
     init {
         test("convertFromBigDecimal function converts non-null big decimal to string and returns non-null string") {

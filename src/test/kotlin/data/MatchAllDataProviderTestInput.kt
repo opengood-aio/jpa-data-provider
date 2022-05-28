@@ -12,8 +12,6 @@ class MatchAllDataProviderTestInput(
     override val dataProvider: JpaDataProvider<*, *>
 ) : JpaDataProviderTestInput {
 
-    override val name = "Match All"
-
     override val data: List<MutableMap<String, Any>> = listOf(
         mutableMapOf(
             "product_name" to "Apple iPhone",
@@ -43,8 +41,18 @@ class MatchAllDataProviderTestInput(
     )
 
     override val filters = listOf(
-        FilteringParameter(name = "product_category", value = "mobile", type = FilteringType.EQUALS, FilteringCondition.AND),
-        FilteringParameter(name = "product_name", value = "Apple", type = FilteringType.CONTAINS, FilteringCondition.AND)
+        FilteringParameter(
+            name = "product_category",
+            value = "mobile",
+            type = FilteringType.EQUALS,
+            FilteringCondition.AND
+        ),
+        FilteringParameter(
+            name = "product_name",
+            value = "Apple",
+            type = FilteringType.CONTAINS,
+            FilteringCondition.AND
+        )
     )
 
     override val sort = listOf(

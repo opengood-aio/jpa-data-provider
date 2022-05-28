@@ -1,16 +1,6 @@
 name: cancel
-# description:
-# - Cancels any running workflows when subsequent workflows are triggered by pushes
 on: [push]
 
 jobs:
   cancel:
-    name: Cancel Previous Workflows
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - name: Cancel
-        uses: styfle/cancel-workflow-action@0.9.1
-        with:
-          workflow_id: 'build.yml,release.yml'
-          access_token: ${{ secrets.GITHUB_TOKEN }}
+    uses: opengoodio/central-workflows/.github/workflows/workflow-cancel.yml@main

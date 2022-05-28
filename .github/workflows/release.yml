@@ -1,15 +1,5 @@
 name: release
-# description:
-# - Creates release version in gradle.properties
-# - Runs Gradle build creating release jar
-# - Publishes release jar to Maven Central artifact repository
-# - Creates release version Git commit
-# - Creates Git release version tag
-# - Pushes Git release version commit and tag
-# - Creates GitHub release for release version tag
-# - Creates new development version in gradle.properties, incrementing minor version part
-# - Creates new development version Git commit
-# - Pushes Git new development version commit
+
 on:
   push:
     branches:
@@ -17,37 +7,11 @@ on:
 
 jobs:
   release:
-    name: Create Release
-    runs-on: ubuntu-latest
-    if: ${{ github.event.head_commit.message == 'Create release' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1.0.4
-
-      - name: Setup Git
-        run: |
-          git config user.name ${GIT_USER}
-          git config user.email ${GIT_EMAIL}
-        env:
-          GIT_USER: ${{ secrets.CI_USER_GIT_USER }}
-          GIT_EMAIL: ${{ secrets.CI_USER_GIT_EMAIL }}
-
-      - name: Setup Java
-        uses: actions/setup-java@v2.5.0
-        with:
-          java-version: 11
-          distribution: adopt
-
-      - name: Run Release and Publish
-        uses: burrunan/gradle-cache-action@v1
-        with:
-          arguments: clean release -PskipTests=true -Prelease.useAutomaticVersion=true
-          gradle-version: wrapper
-        env:
-          GPG_SIGNING_PASSWORD: ${{ secrets.GPG_SIGNING_PASSWORD }}
-          GPG_SIGNING_PRIVATE_KEY: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
-          OSS_REPO_USERNAME: ${{ secrets.OSS_REPO_USERNAME }}
-          OSS_REPO_PASSWORD: ${{ secrets.OSS_REPO_PASSWORD }}
+    uses: opengoodio/central-workflows/.github/workflows/gradle-lib-release.yml@main
+    secrets:
+      git-email: ${{ secrets.GIT_EMAIL }}
+      git-user: ${{ secrets.GIT_USER }}
+      gpg-signing-password: ${{ secrets.GPG_SIGNING_PASSWORD }}
+      gpg-signing-private-key: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
+      oss-repo-username: ${{ secrets.OSS_REPO_USERNAME }}
+      oss-repo-password: ${{ secrets.OSS_REPO_PASSWORD }}

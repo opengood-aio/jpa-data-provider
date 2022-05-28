@@ -4,9 +4,9 @@ import app.DataProvider
 import app.TestApplication
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
+import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.spring.SpringListener
 import io.opengood.commons.kotlin.function.makeEntry
 import io.opengood.extensions.kotest.matcher.shouldBeMapEntry
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +18,7 @@ class FunctionsTest : WordSpec() {
     @Autowired
     lateinit var dataProvider: DataProvider
 
-    override fun listeners() = listOf(SpringListener)
+    override fun extensions() = listOf(SpringExtension)
 
     init {
         "JPA Data Provider" should {
