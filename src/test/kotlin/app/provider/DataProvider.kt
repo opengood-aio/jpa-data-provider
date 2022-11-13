@@ -1,5 +1,7 @@
-package app
+package app.provider
 
+import app.model.Entity
+import app.repository.DataRepository
 import io.opengood.commons.kotlin.extension.method.putIfNotAbsent
 import io.opengood.commons.kotlin.extension.property.Uuid
 import io.opengood.commons.kotlin.extension.property.empty

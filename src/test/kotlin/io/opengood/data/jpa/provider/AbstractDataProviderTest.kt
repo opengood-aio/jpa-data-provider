@@ -1,4 +1,4 @@
-package io.opengood.data.jpa.provider.support
+package io.opengood.data.jpa.provider
 
 import app.TestApplication
 import io.kotest.matchers.booleans.shouldBeFalse
@@ -11,7 +11,6 @@ import io.kotest.matchers.shouldBe
 import io.opengood.commons.kotlin.extension.method.sortAscending
 import io.opengood.commons.kotlin.extension.method.sortDescending
 import io.opengood.commons.kotlin.infix.then
-import io.opengood.data.jpa.provider.JpaDataProvider
 import io.opengood.data.jpa.provider.contract.DataResult
 import io.opengood.data.jpa.provider.contract.Filtering
 import io.opengood.data.jpa.provider.contract.FilteringCondition
@@ -22,7 +21,6 @@ import io.opengood.data.jpa.provider.contract.Paging
 import io.opengood.data.jpa.provider.contract.Sorting
 import io.opengood.data.jpa.provider.contract.SortingDirection
 import io.opengood.data.jpa.provider.contract.SortingParameter
-import io.opengood.data.jpa.provider.getRowColumnMapping
 import io.opengood.extensions.kotest.matcher.shouldBeEqualIgnoringKeys
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
@@ -31,7 +29,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.junit.jupiter.SpringExtension
-import spec.JpaDataProviderTestInput
+import test.spec.JpaDataProviderTestInput
 
 @SpringBootTest(classes = [TestApplication::class])
 @ExtendWith(SpringExtension::class)

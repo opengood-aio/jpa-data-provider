@@ -1,7 +1,7 @@
 package io.opengood.data.jpa.provider
 
-import app.DataProvider
 import app.TestApplication
+import app.provider.DataProvider
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.extensions.spring.SpringExtension

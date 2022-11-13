@@ -1,4 +1,4 @@
-package app
+package app.model
 
 import io.opengood.commons.kotlin.annotation.NoArg
 import java.util.UUID

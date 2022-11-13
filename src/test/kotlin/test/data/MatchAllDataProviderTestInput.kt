@@ -1,11 +1,11 @@
-package data
+package test.data
 
 import io.opengood.data.jpa.provider.JpaDataProvider
 import io.opengood.data.jpa.provider.contract.FilteringCondition
 import io.opengood.data.jpa.provider.contract.FilteringParameter
 import io.opengood.data.jpa.provider.contract.FilteringType
 import org.springframework.context.annotation.Configuration
-import spec.JpaDataProviderTestInput
+import test.spec.JpaDataProviderTestInput
 
 @Configuration
 class MatchAllDataProviderTestInput(

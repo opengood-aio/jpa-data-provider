@@ -1,4 +1,4 @@
-package app
+package app.config
 
 import io.opengood.data.jpa.provider.constant.Formats
 import org.springframework.context.annotation.Bean

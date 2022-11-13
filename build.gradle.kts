@@ -48,4 +48,3 @@ flyway {
     schemas = arrayOf("dbo")
     locations = arrayOf("filesystem:migrations")
 }
-

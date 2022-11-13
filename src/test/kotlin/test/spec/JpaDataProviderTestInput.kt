@@ -1,4 +1,4 @@
-package spec
+package test.spec
 
 import io.opengood.commons.kotlin.extension.method.notContainsKey
 import io.opengood.data.jpa.provider.JpaDataProvider
@@ -27,8 +27,9 @@ interface JpaDataProviderTestInput {
         if (dependencies.isNotEmpty()) {
             dependencies.forEach { parent ->
                 val ids = getIds(parent)
-                if (ids.isNotEmpty())
+                if (ids.isNotEmpty()) {
                     parent.dataProvider.deleteByIds(ids)
+                }
             }
 
             dependencies.forEach { parent ->

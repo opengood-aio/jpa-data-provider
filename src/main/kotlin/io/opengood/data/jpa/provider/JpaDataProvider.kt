@@ -71,8 +71,9 @@ interface JpaDataProvider<T : Any, Id : Any> {
                         ),
                         data = content.map { rowColumnMapper(it) }.toList()
                     )
-                } else
+                } else {
                     DataResult.EMPTY
+                }
             }
         } else {
             val filters = filters(filtering)
@@ -88,8 +89,9 @@ interface JpaDataProvider<T : Any, Id : Any> {
                         ),
                         data = content.map { rowColumnMapper(it) }.toList()
                     )
-                } else
+                } else {
                     DataResult.EMPTY
+                }
             }
         }
     }
@@ -176,8 +178,9 @@ interface JpaDataProvider<T : Any, Id : Any> {
             if (isNotEmpty()) {
                 val o = filterMapper(filters)
                 repository.findAll(Example.of(o, matcher), pageable)
-            } else
+            } else {
                 repository.findAll(pageable)
+            }
         }
     }
 }
