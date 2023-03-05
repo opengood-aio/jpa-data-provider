@@ -4,7 +4,7 @@ import org.springframework.data.domain.Sort
 
 data class SortingParameter(
     val name: String,
-    val direction: SortingDirection
+    val direction: SortingDirection,
 )
 
 internal fun SortingParameter.getSort() =

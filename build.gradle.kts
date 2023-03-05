@@ -4,8 +4,6 @@ plugins {
     id("net.saliman.properties")
 }
 
-group = "io.opengood.data"
-
 opengood {
     artifact {
         description = "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
@@ -21,7 +19,7 @@ opengood {
 dependencies {
     api("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("io.opengood.commons:kotlin-commons:_")
-    implementation("javax.persistence:javax.persistence-api:_")
+    implementation("jakarta.persistence:jakarta.persistence-api:_")
 
     runtimeOnly("org.postgresql:postgresql:_")
 
@@ -29,9 +27,9 @@ dependencies {
 }
 
 allOpen {
-    annotation("javax.persistence.Entity")
-    annotation("javax.persistence.Embeddable")
-    annotation("javax.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.Embeddable")
+    annotation("jakarta.persistence.MappedSuperclass")
 }
 
 noArg {

@@ -7,7 +7,7 @@ data class FilteringParameter(
     val name: String,
     val value: Any,
     val type: FilteringType,
-    val condition: FilteringCondition = FilteringCondition.OR
+    val condition: FilteringCondition = FilteringCondition.OR,
 ) {
     companion object {
         val defaultMatcher: ExampleMatcher

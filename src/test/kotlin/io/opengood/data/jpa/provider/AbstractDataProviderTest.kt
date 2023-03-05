@@ -243,10 +243,10 @@ abstract class AbstractDataProviderTest {
                 params = listOf(
                     SortingParameter(
                         name = sort[sortIndexFirst],
-                        direction = SortingDirection.ASC
-                    )
-                )
-            )
+                        direction = SortingDirection.ASC,
+                    ),
+                ),
+            ),
         )
 
         result.pageInfo.index shouldBe pageIndexFirst
@@ -266,10 +266,10 @@ abstract class AbstractDataProviderTest {
                 params = listOf(
                     SortingParameter(
                         name = sort[sortIndexFirst],
-                        direction = SortingDirection.DESC
-                    )
-                )
-            )
+                        direction = SortingDirection.DESC,
+                    ),
+                ),
+            ),
         )
 
         result.pageInfo.index shouldBe pageIndexFirst
@@ -289,14 +289,14 @@ abstract class AbstractDataProviderTest {
                 params = listOf(
                     SortingParameter(
                         name = sort[sortIndexFirst],
-                        direction = SortingDirection.ASC
+                        direction = SortingDirection.ASC,
                     ),
                     SortingParameter(
                         name = sort[sortIndexNext],
-                        direction = SortingDirection.ASC
-                    )
-                )
-            )
+                        direction = SortingDirection.ASC,
+                    ),
+                ),
+            ),
         )
 
         result.pageInfo.index shouldBe pageIndexFirst
@@ -306,8 +306,8 @@ abstract class AbstractDataProviderTest {
         result.data shouldBe results.sortedWith(
             compareBy(
                 { it[sort[sortIndexFirst]] as String },
-                { it[sort[sortIndexNext]] as String }
-            )
+                { it[sort[sortIndexNext]] as String },
+            ),
         ).slice(recordRangeFirst)
     }
 
@@ -318,7 +318,7 @@ abstract class AbstractDataProviderTest {
 
             val result = dataProvider.get(
                 filtering = Filtering(params = listOf(filters[filterIndexFirst])),
-                paging = Paging(index = pageIndexFirst, size = pageSize)
+                paging = Paging(index = pageIndexFirst, size = pageSize),
             )
 
             result.pageInfo.index shouldBe pageIndexFirst
@@ -337,7 +337,7 @@ abstract class AbstractDataProviderTest {
 
         val result = dataProvider.get(
             filtering = Filtering(params = filters),
-            paging = Paging(index = pageIndexFirst, size = pageSize)
+            paging = Paging(index = pageIndexFirst, size = pageSize),
         )
 
         result.pageInfo.index shouldBe pageIndexFirst
@@ -369,7 +369,7 @@ abstract class AbstractDataProviderTest {
             val results = dataProvider.save(data)
 
             val result = dataProvider.get(
-                filtering = Filtering(params = listOf(filters[filterIndexFirst]))
+                filtering = Filtering(params = listOf(filters[filterIndexFirst])),
             )
 
             result.pageInfo shouldBe PageInfo.EMPTY

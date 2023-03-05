@@ -58,7 +58,9 @@ val convertToDate: (Any?) -> SqlDate? = {
     var sqlDate: SqlDate? = null
     if (it != null) {
         val date = Formats.SQL_DATE.parse(it.toString())
-        if (date != null) sqlDate = SqlDate(date.time)
+        if (date != null) {
+            sqlDate = SqlDate(date.time)
+        }
     }
     sqlDate
 }
@@ -91,7 +93,9 @@ val convertToTimestamp: (Any?) -> SqlTimestamp? = {
     var sqlTimestamp: SqlTimestamp? = null
     if (it != null) {
         val timestamp = Formats.SQL_DATE_TIME.parse(it.toString())
-        if (timestamp != null) sqlTimestamp = SqlTimestamp(timestamp.time)
+        if (timestamp != null) {
+            sqlTimestamp = SqlTimestamp(timestamp.time)
+        }
     }
     sqlTimestamp
 }

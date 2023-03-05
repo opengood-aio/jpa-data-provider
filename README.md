@@ -8,9 +8,13 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/opengoodio/jpa-data-provider/master/LICENSE)
 [![FOSSA](https://app.fossa.com/api/projects/custom%2B22161%2Fgithub.com%2Fopengoodio%2Fjpa-data-provider.svg?type=small)](https://app.fossa.com/projects/custom%2B22161%2Fgithub.com%2Fopengoodio%2Fjpa-data-provider?ref=badge_small)
 
-JPA data provider framework providing reusable data retrieval and
-persistence interface and mapping layer between consumer and data
-repository/entities
+JPA data provider framework providing reusable data retrieval and  persistence
+interface and mapping layer between consumer and data repository/entities
+
+## Compatibility
+
+* Java 17
+* Spring Boot 3
 
 ## Setup
 

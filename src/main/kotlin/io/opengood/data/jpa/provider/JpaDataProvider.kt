@@ -50,7 +50,7 @@ interface JpaDataProvider<T : Any, Id : Any> {
     fun get(
         filtering: Filtering = Filtering.EMPTY,
         paging: Paging = Paging.EMPTY,
-        sorting: Sorting = Sorting.EMPTY
+        sorting: Sorting = Sorting.EMPTY,
     ): DataResult {
         if (paging != Paging.EMPTY) {
             val filters = filters(filtering)
@@ -64,12 +64,12 @@ interface JpaDataProvider<T : Any, Id : Any> {
                         pageInfo = PageInfo(
                             index = results.number,
                             size = results.size,
-                            count = results.totalPages
+                            count = results.totalPages,
                         ),
                         recordInfo = RecordInfo(
-                            total = results.totalElements
+                            total = results.totalElements,
                         ),
-                        data = content.map { rowColumnMapper(it) }.toList()
+                        data = content.map { rowColumnMapper(it) }.toList(),
                     )
                 } else {
                     DataResult.EMPTY
@@ -85,9 +85,9 @@ interface JpaDataProvider<T : Any, Id : Any> {
                     DataResult(
                         pageInfo = PageInfo.EMPTY,
                         recordInfo = RecordInfo(
-                            total = results.size.toLong()
+                            total = results.size.toLong(),
                         ),
-                        data = content.map { rowColumnMapper(it) }.toList()
+                        data = content.map { rowColumnMapper(it) }.toList(),
                     )
                 } else {
                     DataResult.EMPTY
@@ -121,7 +121,11 @@ interface JpaDataProvider<T : Any, Id : Any> {
 
     private fun filters(filtering: Filtering): Map<String, Any> {
         return with(filtering.params) {
-            if (isNotEmpty()) associate { it.name to it.value } else emptyMap()
+            if (isNotEmpty()) {
+                associate { it.name to it.value }
+            } else {
+                emptyMap()
+            }
         }
     }
 
@@ -172,7 +176,7 @@ interface JpaDataProvider<T : Any, Id : Any> {
     private fun query(
         filters: Map<String, Any>,
         matcher: ExampleMatcher,
-        pageable: Pageable = Pageable.unpaged()
+        pageable: Pageable = Pageable.unpaged(),
     ): Page<T> {
         return with(filters) {
             if (isNotEmpty()) {

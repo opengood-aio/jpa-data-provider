@@ -17,7 +17,7 @@ import java.util.UUID
 
 @Component
 class DataProvider(
-    override val repository: DataRepository
+    override val repository: DataRepository,
 ) : JpaDataProvider<Entity, UUID> {
 
     override val name: String = "products"
@@ -27,7 +27,7 @@ class DataProvider(
             "product_id" to "id",
             "product_name" to "name",
             "product_sku" to "sku",
-            "product_category" to "category"
+            "product_category" to "category",
         )
 
     override fun idConverter(id: Any): UUID {
@@ -39,7 +39,7 @@ class DataProvider(
             id = nullableObjectFieldValue("id", filters, convertToUuid),
             name = nullableObjectFieldValue("name", filters, convertToString),
             sku = nullableObjectFieldValue("sku", filters, convertToString),
-            category = nullableObjectFieldValue("category", filters, convertToString)
+            category = nullableObjectFieldValue("category", filters, convertToString),
         )
 
     override fun objectFieldMapper(row: Map<String, Any>): Entity =
@@ -47,7 +47,7 @@ class DataProvider(
             id = objectFieldValue("id", row, Uuid.empty, convertToUuid),
             name = objectFieldValue("name", row, String.empty, convertToString),
             sku = objectFieldValue("sku", row, String.empty, convertToString),
-            category = objectFieldValue("category", row, String.empty, convertToString)
+            category = objectFieldValue("category", row, String.empty, convertToString),
         )
 
     override fun rowColumnMapper(o: Entity): Map<String, Any> {
