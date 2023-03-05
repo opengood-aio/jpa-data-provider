@@ -4,6 +4,8 @@ plugins {
     id("net.saliman.properties")
 }
 
+group = "io.opengood.data"
+
 opengood {
     artifact {
         description = "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
