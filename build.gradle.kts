@@ -1,5 +1,3 @@
-import io.opengood.gradle.enumeration.ProjectType
-
 plugins {
     id("io.opengood.gradle.config")
     id("org.flywaydb.flyway")
@@ -9,9 +7,6 @@ plugins {
 group = "io.opengood.data"
 
 opengood {
-    main {
-        projectType = ProjectType.LIB
-    }
     artifact {
         description = "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
     }
