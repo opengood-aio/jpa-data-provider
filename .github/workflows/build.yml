@@ -16,11 +16,11 @@ jobs:
   build:
     uses: opengoodio/central-workflows/.github/workflows/gradle-lib-postgres-build.yml@main
     with:
+      postgres-admin-db-uri: ${{ vars.POSTGRES_ADMIN_DB_URI }}
+      postgres-build-db-uri: ${{ vars.POSTGRES_BUILD_DB_URI }}
       run-gradle-validation: true
     secrets:
       fossa-api-key: ${{ secrets.FOSSA_API_KEY }}
-      postgres-admin-db-uri: ${{ secrets.POSTGRES_ADMIN_DB_URI }}
       postgres-admin-password: ${{ secrets.POSTGRES_ADMIN_DB_PASSWORD }}
-      postgres-build-db-uri: ${{ secrets.POSTGRES_BUILD_DB_URI }}
       postgres-build-db-svc-name: ${{ secrets.POSTGRES_BUILD_DB_SVC_NAME }}
       postgres-build-db-svc-password: ${{ secrets.POSTGRES_BUILD_DB_SVC_PASSWORD }}
