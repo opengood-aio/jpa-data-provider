@@ -13,11 +13,11 @@ opengood {
         lombok = true
     }
     artifact {
-        description = "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
+        description =
+            "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
     }
     test {
         maxParallelForks = 1
-
     }
 }
 
