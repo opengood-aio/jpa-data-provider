@@ -4,8 +4,9 @@ data class RecordInfo(
     val total: Long,
 ) {
     companion object {
-        val EMPTY = RecordInfo(
-            total = 0,
-        )
+        val EMPTY =
+            RecordInfo(
+                total = 0,
+            )
     }
 }

@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest(classes = [TestApplication::class])
 class FunctionsTest : WordSpec() {
-
     @Autowired
     lateinit var dataProvider: DataProvider
 

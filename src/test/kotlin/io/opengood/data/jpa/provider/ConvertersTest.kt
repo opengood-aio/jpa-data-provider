@@ -16,7 +16,6 @@ import java.sql.Timestamp as SqlTimestamp
 
 @SpringBootTest(classes = [TestApplication::class])
 class ConvertersTest : FunSpec() {
-
     @Autowired
     lateinit var dateString: String
 

@@ -6,10 +6,11 @@ data class DataResult(
     val data: List<Map<String, Any>>,
 ) {
     companion object {
-        val EMPTY = DataResult(
-            pageInfo = PageInfo.EMPTY,
-            recordInfo = RecordInfo.EMPTY,
-            data = emptyList(),
-        )
+        val EMPTY =
+            DataResult(
+                pageInfo = PageInfo.EMPTY,
+                recordInfo = RecordInfo.EMPTY,
+                data = emptyList(),
+            )
     }
 }

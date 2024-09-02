@@ -5,9 +5,10 @@ data class Paging(
     val size: Int,
 ) {
     companion object {
-        val EMPTY = Paging(
-            index = 0,
-            size = 0,
-        )
+        val EMPTY =
+            Paging(
+                index = 0,
+                size = 0,
+            )
     }
 }

@@ -7,14 +7,17 @@ plugins {
 group = "io.opengood.data"
 
 opengood {
+    features {
+        assertj = true
+        junitJupiter = true
+        lombok = true
+    }
     artifact {
         description = "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
     }
     test {
         maxParallelForks = 1
-        frameworks {
-            java = true
-        }
+
     }
 }
 

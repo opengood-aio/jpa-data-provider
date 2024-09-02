@@ -29,7 +29,9 @@ interface JpaDataProvider<T : Any, Id : Any> {
     fun idConverter(id: Any): Id
 
     fun filterMapper(filters: Map<String, Any>): T
+
     fun objectFieldMapper(row: Map<String, Any>): T
+
     fun rowColumnMapper(o: T): Map<String, Any>
 
     fun delete(id: Any) {
@@ -61,14 +63,16 @@ interface JpaDataProvider<T : Any, Id : Any> {
             return with(results) {
                 if (hasContent()) {
                     DataResult(
-                        pageInfo = PageInfo(
-                            index = results.number,
-                            size = results.size,
-                            count = results.totalPages,
-                        ),
-                        recordInfo = RecordInfo(
-                            total = results.totalElements,
-                        ),
+                        pageInfo =
+                            PageInfo(
+                                index = results.number,
+                                size = results.size,
+                                count = results.totalPages,
+                            ),
+                        recordInfo =
+                            RecordInfo(
+                                total = results.totalElements,
+                            ),
                         data = content.map { rowColumnMapper(it) }.toList(),
                     )
                 } else {
@@ -84,9 +88,10 @@ interface JpaDataProvider<T : Any, Id : Any> {
                 if (hasContent()) {
                     DataResult(
                         pageInfo = PageInfo.EMPTY,
-                        recordInfo = RecordInfo(
-                            total = results.size.toLong(),
-                        ),
+                        recordInfo =
+                            RecordInfo(
+                                total = results.size.toLong(),
+                            ),
                         data = content.map { rowColumnMapper(it) }.toList(),
                     )
                 } else {
@@ -119,15 +124,14 @@ interface JpaDataProvider<T : Any, Id : Any> {
         }
     }
 
-    private fun filters(filtering: Filtering): Map<String, Any> {
-        return with(filtering.params) {
+    private fun filters(filtering: Filtering): Map<String, Any> =
+        with(filtering.params) {
             if (isNotEmpty()) {
                 associate { it.name to it.value }
             } else {
                 emptyMap()
             }
         }
-    }
 
     private fun matcher(filtering: Filtering): ExampleMatcher {
         var matcher = matcherCondition(filtering)
@@ -177,8 +181,8 @@ interface JpaDataProvider<T : Any, Id : Any> {
         filters: Map<String, Any>,
         matcher: ExampleMatcher,
         pageable: Pageable = Pageable.unpaged(),
-    ): Page<T> {
-        return with(filters) {
+    ): Page<T> =
+        with(filters) {
             if (isNotEmpty()) {
                 val o = filterMapper(filters)
                 repository.findAll(Example.of(o, matcher), pageable)
@@ -186,5 +190,4 @@ interface JpaDataProvider<T : Any, Id : Any> {
                 repository.findAll(pageable)
             }
         }
-    }
 }

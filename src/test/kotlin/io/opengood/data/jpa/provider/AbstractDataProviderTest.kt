@@ -34,7 +34,6 @@ import test.spec.JpaDataProviderTestInput
 @SpringBootTest(classes = [TestApplication::class])
 @ExtendWith(SpringExtension::class)
 abstract class AbstractDataProviderTest {
-
     abstract val testInput: JpaDataProviderTestInput
 
     lateinit var dataProvider: JpaDataProvider<*, *>
@@ -75,7 +74,7 @@ abstract class AbstractDataProviderTest {
         filterCondition = (
             (testInput.filters.any { it.condition == FilteringCondition.AND }) then
                 { FilteringCondition.AND }
-            ) ?: FilteringCondition.OR
+        ) ?: FilteringCondition.OR
 
         with(testInput) {
             generateIds()
@@ -237,17 +236,20 @@ abstract class AbstractDataProviderTest {
     fun `Data provider receives sorting request and returns sorted ascending results when data exists in data repository`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-            sorting = Sorting(
-                params = listOf(
-                    SortingParameter(
-                        name = sort[sortIndexFirst],
-                        direction = SortingDirection.ASC,
+        val result =
+            dataProvider.get(
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+                sorting =
+                    Sorting(
+                        params =
+                            listOf(
+                                SortingParameter(
+                                    name = sort[sortIndexFirst],
+                                    direction = SortingDirection.ASC,
+                                ),
+                            ),
                     ),
-                ),
-            ),
-        )
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
@@ -260,17 +262,20 @@ abstract class AbstractDataProviderTest {
     fun `Data provider receives sorting request and returns sorted descending results when data exists in data repository`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-            sorting = Sorting(
-                params = listOf(
-                    SortingParameter(
-                        name = sort[sortIndexFirst],
-                        direction = SortingDirection.DESC,
+        val result =
+            dataProvider.get(
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+                sorting =
+                    Sorting(
+                        params =
+                            listOf(
+                                SortingParameter(
+                                    name = sort[sortIndexFirst],
+                                    direction = SortingDirection.DESC,
+                                ),
+                            ),
                     ),
-                ),
-            ),
-        )
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
@@ -283,32 +288,37 @@ abstract class AbstractDataProviderTest {
     fun `Data provider receives sorting request and returns sorted multiple results when data exists in data repository`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-            sorting = Sorting(
-                params = listOf(
-                    SortingParameter(
-                        name = sort[sortIndexFirst],
-                        direction = SortingDirection.ASC,
+        val result =
+            dataProvider.get(
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+                sorting =
+                    Sorting(
+                        params =
+                            listOf(
+                                SortingParameter(
+                                    name = sort[sortIndexFirst],
+                                    direction = SortingDirection.ASC,
+                                ),
+                                SortingParameter(
+                                    name = sort[sortIndexNext],
+                                    direction = SortingDirection.ASC,
+                                ),
+                            ),
                     ),
-                    SortingParameter(
-                        name = sort[sortIndexNext],
-                        direction = SortingDirection.ASC,
-                    ),
-                ),
-            ),
-        )
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
         result.pageInfo.count shouldBe pageCount
         result.recordInfo.total shouldBe requiredRecords
-        result.data shouldBe results.sortedWith(
-            compareBy(
-                { it[sort[sortIndexFirst]] as String },
-                { it[sort[sortIndexNext]] as String },
-            ),
-        ).slice(recordRangeFirst)
+        result.data shouldBe
+            results
+                .sortedWith(
+                    compareBy(
+                        { it[sort[sortIndexFirst]] as String },
+                        { it[sort[sortIndexNext]] as String },
+                    ),
+                ).slice(recordRangeFirst)
     }
 
     @Test
@@ -316,18 +326,20 @@ abstract class AbstractDataProviderTest {
         if (filterCondition == FilteringCondition.OR) {
             val results = dataProvider.save(data)
 
-            val result = dataProvider.get(
-                filtering = Filtering(params = listOf(filters[filterIndexFirst])),
-                paging = Paging(index = pageIndexFirst, size = pageSize),
-            )
+            val result =
+                dataProvider.get(
+                    filtering = Filtering(params = listOf(filters[filterIndexFirst])),
+                    paging = Paging(index = pageIndexFirst, size = pageSize),
+                )
 
             result.pageInfo.index shouldBe pageIndexFirst
             result.pageInfo.size shouldBe pageSize
             result.pageInfo.count shouldBe 1
             result.recordInfo.total shouldBe 1
-            result.data shouldBe results.filter {
-                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
-            }
+            result.data shouldBe
+                results.filter {
+                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                }
         }
     }
 
@@ -335,10 +347,11 @@ abstract class AbstractDataProviderTest {
     fun `Data provider receives multiple equals and contains type filters and returns filtered paginated results when data exists in data repository`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            filtering = Filtering(params = filters),
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-        )
+        val result =
+            dataProvider.get(
+                filtering = Filtering(params = filters),
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
@@ -347,18 +360,20 @@ abstract class AbstractDataProviderTest {
 
         when (filterCondition) {
             FilteringCondition.AND -> {
-                result.data shouldBe results.filter {
-                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
-                        (it[filters[filterIndexNext].name] as String)
-                            .contains(filters[filterIndexNext].value as String)
-                }
+                result.data shouldBe
+                    results.filter {
+                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
+                            (it[filters[filterIndexNext].name] as String)
+                                .contains(filters[filterIndexNext].value as String)
+                    }
             }
             FilteringCondition.OR -> {
-                result.data shouldBe results.filter {
-                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
-                        (it[filters[filterIndexNext].name] as String)
-                            .contains(filters[filterIndexNext].value as String)
-                }
+                result.data shouldBe
+                    results.filter {
+                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
+                            (it[filters[filterIndexNext].name] as String)
+                                .contains(filters[filterIndexNext].value as String)
+                    }
             }
         }
     }
@@ -368,15 +383,17 @@ abstract class AbstractDataProviderTest {
         if (filterCondition == FilteringCondition.OR) {
             val results = dataProvider.save(data)
 
-            val result = dataProvider.get(
-                filtering = Filtering(params = listOf(filters[filterIndexFirst])),
-            )
+            val result =
+                dataProvider.get(
+                    filtering = Filtering(params = listOf(filters[filterIndexFirst])),
+                )
 
             result.pageInfo shouldBe PageInfo.EMPTY
             result.recordInfo.total shouldBe 1
-            result.data shouldBe results.filter {
-                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
-            }
+            result.data shouldBe
+                results.filter {
+                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                }
         }
     }
 
@@ -392,18 +409,20 @@ abstract class AbstractDataProviderTest {
 
             when (filterCondition) {
                 FilteringCondition.AND -> {
-                    result.data shouldBe results.filter {
-                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
-                            (it[filters[filterIndexNext].name] as String)
-                                .contains(filters[filterIndexNext].value as String)
-                    }
+                    result.data shouldBe
+                        results.filter {
+                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
+                                (it[filters[filterIndexNext].name] as String)
+                                    .contains(filters[filterIndexNext].value as String)
+                        }
                 }
                 FilteringCondition.OR -> {
-                    result.data shouldBe results.filter {
-                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
-                            (it[filters[filterIndexNext].name] as String)
-                                .contains(filters[filterIndexNext].value as String)
-                    }
+                    result.data shouldBe
+                        results.filter {
+                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
+                                (it[filters[filterIndexNext].name] as String)
+                                    .contains(filters[filterIndexNext].value as String)
+                        }
                 }
             }
         }
@@ -419,9 +438,10 @@ abstract class AbstractDataProviderTest {
 
         result.shouldNotBeNull()
         result.shouldNotBeEmpty()
-        result shouldBe results.first {
-            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
-        }
+        result shouldBe
+            results.first {
+                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+            }
     }
 
     @Test

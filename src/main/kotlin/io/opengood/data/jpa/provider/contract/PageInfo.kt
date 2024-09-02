@@ -6,10 +6,11 @@ data class PageInfo(
     val count: Int,
 ) {
     companion object {
-        val EMPTY = PageInfo(
-            index = 0,
-            size = 0,
-            count = 0,
-        )
+        val EMPTY =
+            PageInfo(
+                index = 0,
+                size = 0,
+                count = 0,
+            )
     }
 }
