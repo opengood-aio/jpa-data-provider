@@ -19,7 +19,6 @@ import java.util.UUID
 class DataProvider(
     override val repository: DataRepository,
 ) : JpaDataProvider<Entity, UUID> {
-
     override val name: String = "products"
     override val id: String = "id"
     override val mappings: Map<String, String> =
@@ -30,9 +29,7 @@ class DataProvider(
             "product_category" to "category",
         )
 
-    override fun idConverter(id: Any): UUID {
-        return convertToUuid(id)!!
-    }
+    override fun idConverter(id: Any): UUID = convertToUuid(id)!!
 
     override fun filterMapper(filters: Map<String, Any>): Entity =
         Entity(

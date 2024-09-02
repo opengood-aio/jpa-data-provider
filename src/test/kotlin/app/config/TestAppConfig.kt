@@ -15,13 +15,14 @@ import java.sql.Timestamp as SqlTimestamp
 
 @Configuration
 class TestAppConfig {
-
     @Bean
     fun clock(): Clock = Clock.fixed(Instant.now(), ZoneId.systemDefault())
 
     @Bean
-    fun dateString(clock: Clock, sqlDateFormatter: DateTimeFormatter): String =
-        LocalDate.now(clock).format(sqlDateFormatter)
+    fun dateString(
+        clock: Clock,
+        sqlDateFormatter: DateTimeFormatter,
+    ): String = LocalDate.now(clock).format(sqlDateFormatter)
 
     @Bean
     fun sqlDateFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern(Formats.SQL_DATE.toPattern())
@@ -36,8 +37,10 @@ class TestAppConfig {
     fun sqlTimestamp(clock: Clock): SqlTimestamp = SqlTimestamp(clock.millis())
 
     @Bean
-    fun timestampString(clock: Clock, sqlDateTimeFormatter: DateTimeFormatter): String =
-        LocalDateTime.now(clock).format(sqlDateTimeFormatter)
+    fun timestampString(
+        clock: Clock,
+        sqlDateTimeFormatter: DateTimeFormatter,
+    ): String = LocalDateTime.now(clock).format(sqlDateTimeFormatter)
 
     @Bean
     fun uuid(): UUID = UUID.randomUUID()

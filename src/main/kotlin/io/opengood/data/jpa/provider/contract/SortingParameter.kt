@@ -7,5 +7,4 @@ data class SortingParameter(
     val direction: SortingDirection,
 )
 
-internal fun SortingParameter.getSort() =
-    if (direction == SortingDirection.DESC) Sort.by(name).descending() else Sort.by(name).ascending()
+internal fun SortingParameter.getSort() = if (direction == SortingDirection.DESC) Sort.by(name).descending() else Sort.by(name).ascending()

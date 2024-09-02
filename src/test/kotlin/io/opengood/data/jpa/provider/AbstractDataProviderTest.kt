@@ -34,7 +34,6 @@ import test.spec.JpaDataProviderTestInput
 @SpringBootTest(classes = [TestApplication::class])
 @ExtendWith(SpringExtension::class)
 abstract class AbstractDataProviderTest {
-
     abstract val testInput: JpaDataProviderTestInput
 
     lateinit var dataProvider: JpaDataProvider<*, *>
@@ -75,7 +74,7 @@ abstract class AbstractDataProviderTest {
         filterCondition = (
             (testInput.filters.any { it.condition == FilteringCondition.AND }) then
                 { FilteringCondition.AND }
-            ) ?: FilteringCondition.OR
+        ) ?: FilteringCondition.OR
 
         with(testInput) {
             generateIds()
@@ -130,7 +129,7 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives identifier and deletes data when it exists in data repository`() {
+    fun `Data provider receives identifier and deletes data when it exists`() {
         val results = dataProvider.save(data)
 
         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
@@ -141,7 +140,7 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives lists of identifiers and deletes all data when it exists in data repository`() {
+    fun `Data provider receives lists of identifiers and deletes all data when it exists`() {
         val results = dataProvider.save(data)
 
         val ids = results.map { it[dataProvider.getRowColumnMapping(dataProvider.id)]!! }
@@ -154,7 +153,7 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives identifier and returns true when data exists in data repository`() {
+    fun `Data provider receives identifier and returns true when data exists`() {
         val results = dataProvider.save(data)
 
         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
@@ -163,14 +162,14 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives identifier and returns false when data does not exist in data repository`() {
+    fun `Data provider receives identifier and returns false when data does not exist`() {
         val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
 
         dataProvider.exists(id).shouldBeFalse()
     }
 
     @Test
-    fun `Data provider receives paging request and returns first page of paginated results when data exists in data repository`() {
+    fun `Data provider receives paging request and returns first page of paginated results when data exists`() {
         val results = dataProvider.save(data)
 
         val result = dataProvider.get(paging = Paging(index = pageIndexFirst, size = pageSize))
@@ -183,7 +182,7 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives paging request and returns next page of paginated results when data exists in data repository`() {
+    fun `Data provider receives paging request and returns next page of paginated results when data exists`() {
         val results = dataProvider.save(data)
 
         val result = dataProvider.get(paging = Paging(index = pageIndexNext, size = pageSize))
@@ -196,7 +195,7 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives paging request and returns last page of paginated results when data exists in data repository`() {
+    fun `Data provider receives paging request and returns last page of paginated results when data exists`() {
         val results = dataProvider.save(data)
 
         val result = dataProvider.get(paging = Paging(index = pageIndexLast, size = pageSize))
@@ -209,14 +208,14 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives paging request and returns no results when no data exists in data repository`() {
+    fun `Data provider receives paging request and returns no results when no data exists`() {
         val result = dataProvider.get(paging = Paging(index = pageIndexFirst, size = pageSize))
 
         result shouldBe DataResult.EMPTY
     }
 
     @Test
-    fun `Data provider receives empty paging request and returns non-paginated results when data exists in data repository`() {
+    fun `Data provider receives empty paging request and returns non-paginated results when data exists`() {
         val results = dataProvider.save(data)
 
         val result = dataProvider.get(paging = Paging.EMPTY)
@@ -227,27 +226,30 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives empty paging request and returns no results when no data exists in data repository`() {
+    fun `Data provider receives empty paging request and returns no results when no data exists`() {
         val result = dataProvider.get(paging = Paging.EMPTY)
 
         result shouldBe DataResult.EMPTY
     }
 
     @Test
-    fun `Data provider receives sorting request and returns sorted ascending results when data exists in data repository`() {
+    fun `Data provider receives sorting request and returns sorted ascending results when data exists`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-            sorting = Sorting(
-                params = listOf(
-                    SortingParameter(
-                        name = sort[sortIndexFirst],
-                        direction = SortingDirection.ASC,
+        val result =
+            dataProvider.get(
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+                sorting =
+                    Sorting(
+                        params =
+                            listOf(
+                                SortingParameter(
+                                    name = sort[sortIndexFirst],
+                                    direction = SortingDirection.ASC,
+                                ),
+                            ),
                     ),
-                ),
-            ),
-        )
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
@@ -257,20 +259,23 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives sorting request and returns sorted descending results when data exists in data repository`() {
+    fun `Data provider receives sorting request and returns sorted descending results when data exists`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-            sorting = Sorting(
-                params = listOf(
-                    SortingParameter(
-                        name = sort[sortIndexFirst],
-                        direction = SortingDirection.DESC,
+        val result =
+            dataProvider.get(
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+                sorting =
+                    Sorting(
+                        params =
+                            listOf(
+                                SortingParameter(
+                                    name = sort[sortIndexFirst],
+                                    direction = SortingDirection.DESC,
+                                ),
+                            ),
                     ),
-                ),
-            ),
-        )
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
@@ -280,65 +285,73 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider receives sorting request and returns sorted multiple results when data exists in data repository`() {
+    fun `Data provider receives sorting request and returns sorted multiple results when data exists`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-            sorting = Sorting(
-                params = listOf(
-                    SortingParameter(
-                        name = sort[sortIndexFirst],
-                        direction = SortingDirection.ASC,
+        val result =
+            dataProvider.get(
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+                sorting =
+                    Sorting(
+                        params =
+                            listOf(
+                                SortingParameter(
+                                    name = sort[sortIndexFirst],
+                                    direction = SortingDirection.ASC,
+                                ),
+                                SortingParameter(
+                                    name = sort[sortIndexNext],
+                                    direction = SortingDirection.ASC,
+                                ),
+                            ),
                     ),
-                    SortingParameter(
-                        name = sort[sortIndexNext],
-                        direction = SortingDirection.ASC,
-                    ),
-                ),
-            ),
-        )
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
         result.pageInfo.count shouldBe pageCount
         result.recordInfo.total shouldBe requiredRecords
-        result.data shouldBe results.sortedWith(
-            compareBy(
-                { it[sort[sortIndexFirst]] as String },
-                { it[sort[sortIndexNext]] as String },
-            ),
-        ).slice(recordRangeFirst)
+        result.data shouldBe
+            results
+                .sortedWith(
+                    compareBy(
+                        { it[sort[sortIndexFirst]] as String },
+                        { it[sort[sortIndexNext]] as String },
+                    ),
+                ).slice(recordRangeFirst)
     }
 
     @Test
-    fun `Data provider receives single equals type filter and returns filtered paginated results when data exists in data repository`() {
+    fun `Data provider receives single equals type filter and returns filtered paginated results when data exists`() {
         if (filterCondition == FilteringCondition.OR) {
             val results = dataProvider.save(data)
 
-            val result = dataProvider.get(
-                filtering = Filtering(params = listOf(filters[filterIndexFirst])),
-                paging = Paging(index = pageIndexFirst, size = pageSize),
-            )
+            val result =
+                dataProvider.get(
+                    filtering = Filtering(params = listOf(filters[filterIndexFirst])),
+                    paging = Paging(index = pageIndexFirst, size = pageSize),
+                )
 
             result.pageInfo.index shouldBe pageIndexFirst
             result.pageInfo.size shouldBe pageSize
             result.pageInfo.count shouldBe 1
             result.recordInfo.total shouldBe 1
-            result.data shouldBe results.filter {
-                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
-            }
+            result.data shouldBe
+                results.filter {
+                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                }
         }
     }
 
     @Test
-    fun `Data provider receives multiple equals and contains type filters and returns filtered paginated results when data exists in data repository`() {
+    fun `Data provider receives multiple equals and contains type filters and returns filtered paginated results when data exists`() {
         val results = dataProvider.save(data)
 
-        val result = dataProvider.get(
-            filtering = Filtering(params = filters),
-            paging = Paging(index = pageIndexFirst, size = pageSize),
-        )
+        val result =
+            dataProvider.get(
+                filtering = Filtering(params = filters),
+                paging = Paging(index = pageIndexFirst, size = pageSize),
+            )
 
         result.pageInfo.index shouldBe pageIndexFirst
         result.pageInfo.size shouldBe pageSize
@@ -347,41 +360,45 @@ abstract class AbstractDataProviderTest {
 
         when (filterCondition) {
             FilteringCondition.AND -> {
-                result.data shouldBe results.filter {
-                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
-                        (it[filters[filterIndexNext].name] as String)
-                            .contains(filters[filterIndexNext].value as String)
-                }
+                result.data shouldBe
+                    results.filter {
+                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
+                            (it[filters[filterIndexNext].name] as String)
+                                .contains(filters[filterIndexNext].value as String)
+                    }
             }
             FilteringCondition.OR -> {
-                result.data shouldBe results.filter {
-                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
-                        (it[filters[filterIndexNext].name] as String)
-                            .contains(filters[filterIndexNext].value as String)
-                }
+                result.data shouldBe
+                    results.filter {
+                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
+                            (it[filters[filterIndexNext].name] as String)
+                                .contains(filters[filterIndexNext].value as String)
+                    }
             }
         }
     }
 
     @Test
-    fun `Data provider receives single equals type filter and returns filtered non-paginated results when data exists in data repository`() {
+    fun `Data provider receives single equals type filter and returns filtered non-paginated results when data exists`() {
         if (filterCondition == FilteringCondition.OR) {
             val results = dataProvider.save(data)
 
-            val result = dataProvider.get(
-                filtering = Filtering(params = listOf(filters[filterIndexFirst])),
-            )
+            val result =
+                dataProvider.get(
+                    filtering = Filtering(params = listOf(filters[filterIndexFirst])),
+                )
 
             result.pageInfo shouldBe PageInfo.EMPTY
             result.recordInfo.total shouldBe 1
-            result.data shouldBe results.filter {
-                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
-            }
+            result.data shouldBe
+                results.filter {
+                    it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+                }
         }
     }
 
     @Test
-    fun `Data provider receives multiple equals and contains type filters and returns non-filtered paginated results when data exists in data repository`() {
+    fun `Data provider receives multiple equals and contains type filters and returns non-filtered paginated results when data exists`() {
         if (filterCondition == FilteringCondition.OR) {
             val results = dataProvider.save(data)
 
@@ -392,25 +409,27 @@ abstract class AbstractDataProviderTest {
 
             when (filterCondition) {
                 FilteringCondition.AND -> {
-                    result.data shouldBe results.filter {
-                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
-                            (it[filters[filterIndexNext].name] as String)
-                                .contains(filters[filterIndexNext].value as String)
-                    }
+                    result.data shouldBe
+                        results.filter {
+                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value &&
+                                (it[filters[filterIndexNext].name] as String)
+                                    .contains(filters[filterIndexNext].value as String)
+                        }
                 }
                 FilteringCondition.OR -> {
-                    result.data shouldBe results.filter {
-                        it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
-                            (it[filters[filterIndexNext].name] as String)
-                                .contains(filters[filterIndexNext].value as String)
-                    }
+                    result.data shouldBe
+                        results.filter {
+                            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value ||
+                                (it[filters[filterIndexNext].name] as String)
+                                    .contains(filters[filterIndexNext].value as String)
+                        }
                 }
             }
         }
     }
 
     @Test
-    fun `Data provider receives identifier and returns result when data exists in data repository`() {
+    fun `Data provider receives identifier and returns result when data exists`() {
         val results = dataProvider.save(data)
 
         val id = results[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
@@ -419,13 +438,14 @@ abstract class AbstractDataProviderTest {
 
         result.shouldNotBeNull()
         result.shouldNotBeEmpty()
-        result shouldBe results.first {
-            it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
-        }
+        result shouldBe
+            results.first {
+                it[filters[filterIndexFirst].name] == filters[filterIndexFirst].value
+            }
     }
 
     @Test
-    fun `Data provider receives identifier and does not return result when no data exists in data repository`() {
+    fun `Data provider receives identifier and does not return result when no data exists`() {
         val id = data[recordIndexFirst][dataProvider.getRowColumnMapping(dataProvider.id)]!!
 
         val result = dataProvider.getById(id)
@@ -442,7 +462,7 @@ abstract class AbstractDataProviderTest {
     }
 
     @Test
-    fun `Data provider does not convert data into entities and does not send to data repository and does not return results when data is not saved`() {
+    fun `Data provider does not convert data into entities nor send to data repository and does not return results when data not saved`() {
         val results = dataProvider.save(emptyList())
 
         results.shouldBeEmpty()

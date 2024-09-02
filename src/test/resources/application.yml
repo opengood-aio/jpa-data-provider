@@ -6,6 +6,9 @@ spring:
     username: ${test.db.username:example}
     password: ${test.db.password:fake}
 
+  flyway:
+    enabled: false
+
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

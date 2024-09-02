@@ -3,4 +3,6 @@ on: [push]
 
 jobs:
   cancel:
-    uses: opengoodio/central-workflows/.github/workflows/workflow-cancel.yml@main
+    uses: opengood-aio/central-workflows/.github/workflows/workflow-cancel.yml@main
+    secrets:
+      workflow-token: ${{ secrets.WORKFLOW_TOKEN }}

@@ -4,8 +4,9 @@ data class Sorting(
     val params: List<SortingParameter>,
 ) {
     companion object {
-        val EMPTY = Sorting(
-            params = emptyList(),
-        )
+        val EMPTY =
+            Sorting(
+                params = emptyList(),
+            )
     }
 }

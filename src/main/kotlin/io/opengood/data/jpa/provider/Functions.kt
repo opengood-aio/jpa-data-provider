@@ -3,11 +3,9 @@ package io.opengood.data.jpa.provider
 import io.opengood.commons.kotlin.function.makeEntry
 import io.opengood.commons.kotlin.infix.firstOrDefault
 
-fun JpaDataProvider<*, *>.getObjectFieldMapping(name: String) =
-    mappings.filter { it.key == name }.map { it.value }.first()
+fun JpaDataProvider<*, *>.getObjectFieldMapping(name: String) = mappings.filter { it.key == name }.map { it.value }.first()
 
-fun JpaDataProvider<*, *>.getRowColumnMapping(name: String) =
-    mappings.filter { it.value == name }.map { it.key }.first()
+fun JpaDataProvider<*, *>.getRowColumnMapping(name: String) = mappings.filter { it.value == name }.map { it.key }.first()
 
 fun <Out : Any> JpaDataProvider<*, *>.nullableObjectFieldValue(
     name: String,
@@ -48,13 +46,11 @@ fun <Out : Any> JpaDataProvider<*, *>.objectFieldValue(
     row: Map<String, Any>,
     default: Out,
     converter: (Any?) -> Out?,
-): Out =
-    nullableObjectFieldValue(name, row, converter).firstOrDefault(default)
+): Out = nullableObjectFieldValue(name, row, converter).firstOrDefault(default)
 
 fun <In : Any, Out : Any> JpaDataProvider<*, *>.rowColumnValue(
     name: String,
     value: In?,
     default: In,
     converter: (In?) -> Out?,
-): Map.Entry<String, Any> =
-    nullableRowColumnValue(name, value, converter).firstOrDefault(makeEntry(getRowColumnMapping(name), default))
+): Map.Entry<String, Any> = nullableRowColumnValue(name, value, converter).firstOrDefault(makeEntry(getRowColumnMapping(name), default))
