@@ -1,3 +1,10 @@
+buildscript {
+    dependencies {
+        classpath("org.flywaydb:flyway-database-postgresql:_")
+        classpath("org.postgresql:postgresql:_")
+    }
+}
+
 plugins {
     id("io.opengood.gradle.config")
     id("org.flywaydb.flyway")
@@ -14,7 +21,8 @@ opengood {
     }
     artifact {
         description =
-            "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between consumer and data repository/entities"
+            "JPA data provider framework providing reusable data retrieval and persistence interface and mapping layer between " +
+                "consumer and data repository/entities"
     }
     test {
         maxParallelForks = 1
@@ -26,6 +34,7 @@ dependencies {
     implementation("io.opengood.commons:kotlin-commons:_")
     implementation("jakarta.persistence:jakarta.persistence-api:_")
 
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:_")
     runtimeOnly("org.postgresql:postgresql:_")
 
     testImplementation("io.opengood.extensions:kotest-extensions:_")
