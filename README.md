@@ -2,6 +2,7 @@
 
 [![Build](https://github.com/opengood-aio/jpa-data-provider/workflows/build/badge.svg)](https://github.com/opengood-aio/jpa-data-provider/actions?query=workflow%3Abuild)
 [![Release](https://github.com/opengood-aio/jpa-data-provider/workflows/release/badge.svg)](https://github.com/opengood-aio/jpa-data-provider/actions?query=workflow%3Arelease)
+[![CodeQL](https://github.com/opengood-aio/jpa-data-provider/actions/workflows/codeql.yml/badge.svg)](https://github.com/opengood-aio/jpa-data-provider/actions/workflows/codeql.yml)
 [![Codecov](https://codecov.io/gh/opengood-aio/jpa-data-provider/branch/main/graph/badge.svg?token=AEEYTGK87F)](https://codecov.io/gh/opengood-aio/jpa-data-provider)
 [![Release Version](https://img.shields.io/github/release/opengood-aio/jpa-data-provider.svg)](https://github.com/opengood-aio/jpa-data-provider/releases/latest)
 [![Maven Central](https://img.shields.io/maven-central/v/io.opengood.data/jpa-data-provider.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.opengood.data%22%20AND%20a:%22jpa-data-provider%22)
