@@ -18,6 +18,7 @@ jobs:
     with:
       postgres-admin-db-uri: ${{ vars.POSTGRES_ADMIN_DB_URI }}
       postgres-build-db-uri: ${{ vars.POSTGRES_BUILD_DB_URI }}
+      run-code-coverage: true
       run-gradle-validation: true
     secrets:
       codecov-token: ${{ secrets.CODECOV_TOKEN }}

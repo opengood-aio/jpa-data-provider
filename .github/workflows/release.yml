@@ -20,8 +20,10 @@ jobs:
     with:
       git-email: ${{ vars.GIT_EMAIL }}
       git-user: ${{ vars.GIT_USER }}
+      run-code-coverage: true
       run-gradle-validation: true
     secrets:
+      codecov-token: ${{ secrets.CODECOV_TOKEN }}
       gpg-signing-key-id: ${{ secrets.GPG_SIGNING_KEY_ID }}
       gpg-signing-password: ${{ secrets.GPG_SIGNING_PASSWORD }}
       gpg-signing-private-key: ${{ secrets.GPG_SIGNING_PRIVATE_KEY }}
